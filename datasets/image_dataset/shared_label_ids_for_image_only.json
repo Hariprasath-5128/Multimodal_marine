@@ -1,0 +1,476 @@
+{
+  "amazon river dolphin": {
+    "train": 0,
+    "test": 7,
+    "total": 7,
+    "label_id": 0
+  },
+  "amazonian manatee": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 1
+  },
+  "atlantic spotted dolphin": {
+    "train": 0,
+    "test": 7,
+    "total": 7,
+    "label_id": 3
+  },
+  "australian sea lion": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 4
+  },
+  "baikal seal": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 5
+  },
+  "bearded seal": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 6
+  },
+  "beluga whale": {
+    "train": 0,
+    "test": 1,
+    "total": 1,
+    "label_id": 7
+  },
+  "bolivian river dolphin": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 8
+  },
+  "bottlenose dolphin": {
+    "train": 0,
+    "test": 3,
+    "total": 3,
+    "label_id": 9
+  },
+  "bowhead whale": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 10
+  },
+  "burrunan dolphin": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 12
+  },
+  "california sea lion": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 13
+  },
+  "caspian seal": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 14
+  },
+  "clymene dolphin": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 15
+  },
+  "common dolphin": {
+    "train": 0,
+    "test": 10,
+    "total": 10,
+    "label_id": 16
+  },
+  "dalls porpoise": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 17
+  },
+  "dolphin": {
+    "train": 0,
+    "test": 0,
+    "total": 0,
+    "label_id": 75
+  },
+  "dugong": {
+    "train": 18,
+    "test": 2,
+    "total": 20,
+    "label_id": 18
+  },
+  "dusky dolphin": {
+    "train": 0,
+    "test": 7,
+    "total": 7,
+    "label_id": 19
+  },
+  "dwarf sperm whale": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 20
+  },
+  "false killer whale": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 21
+  },
+  "fin whale": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 22
+  },
+  "frasers dolphin": {
+    "train": 0,
+    "test": 3,
+    "total": 3,
+    "label_id": 76
+  },
+  "gray whale": {
+    "train": 0,
+    "test": 8,
+    "total": 8,
+    "label_id": 24
+  },
+  "grey seal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 25
+  },
+  "guiana dolphin": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 26
+  },
+  "harbour porpoise": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 27
+  },
+  "harp seal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 28
+  },
+  "hectors dolphin": {
+    "train": 0,
+    "test": 9,
+    "total": 9,
+    "label_id": 30
+  },
+  "hooded seal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 31
+  },
+  "humpback whale": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 33
+  },
+  "indo-pacific bottlenose dolphin": {
+    "train": 0,
+    "test": 7,
+    "total": 7,
+    "label_id": 34
+  },
+  "indo-pacific finless porpoise": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 35
+  },
+  "indo-pacific humpbacked dolphin": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 36
+  },
+  "irrawaddy dolphin": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 37
+  },
+  "killer whale": {
+    "train": 0,
+    "test": 1,
+    "total": 1,
+    "label_id": 38
+  },
+  "la plata dolphin": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 39
+  },
+  "leopard seal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 40
+  },
+  "long-finned pilot whale": {
+    "train": 0,
+    "test": 2,
+    "total": 2,
+    "label_id": 41
+  },
+  "manatee": {
+    "train": 0,
+    "test": 0,
+    "total": 0,
+    "label_id": 77
+  },
+  "mediterranean monk seal": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 42
+  },
+  "melon-headed whale": {
+    "train": 0,
+    "test": 3,
+    "total": 3,
+    "label_id": 43
+  },
+  "minke whale": {
+    "train": 0,
+    "test": 3,
+    "total": 3,
+    "label_id": 44
+  },
+  "narwhal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 45
+  },
+  "new zealand sea lion": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 46
+  },
+  "north atlantic right whale": {
+    "train": 0,
+    "test": 3,
+    "total": 3,
+    "label_id": 47
+  },
+  "northern elephant seal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 48
+  },
+  "orca": {
+    "train": 0,
+    "test": 10,
+    "total": 10,
+    "label_id": 49
+  },
+  "pantropical spotted dolphin": {
+    "train": 0,
+    "test": 3,
+    "total": 3,
+    "label_id": 50
+  },
+  "polar bear": {
+    "train": 0,
+    "test": 2,
+    "total": 2,
+    "label_id": 51
+  },
+  "polar_bear": {
+    "train": 20,
+    "test": 0,
+    "total": 20,
+    "label_id": 78
+  },
+  "porpoise": {
+    "train": 0,
+    "test": 0,
+    "total": 0,
+    "label_id": 79
+  },
+  "right whale": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 52
+  },
+  "ringed seal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 53
+  },
+  "risso's dolphin": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 54
+  },
+  "ross seal": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 55
+  },
+  "rough-toothed dolphin": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 56
+  },
+  "sea otter": {
+    "train": 0,
+    "test": 1,
+    "total": 1,
+    "label_id": 57
+  },
+  "sea_otter": {
+    "train": 20,
+    "test": 0,
+    "total": 20,
+    "label_id": 80
+  },
+  "seal": {
+    "train": 0,
+    "test": 0,
+    "total": 0,
+    "label_id": 81
+  },
+  "sealion": {
+    "train": 0,
+    "test": 0,
+    "total": 0,
+    "label_id": 82
+  },
+  "short-finned pilot whale": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 58
+  },
+  "south american sea lion": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 59
+  },
+  "south asian river dolphin": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 60
+  },
+  "southern elephant seal": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 61
+  },
+  "southern right whale": {
+    "train": 0,
+    "test": 4,
+    "total": 4,
+    "label_id": 62
+  },
+  "sperm whale": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 63
+  },
+  "spinner dolphin": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 64
+  },
+  "spotted seal": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 65
+  },
+  "steller sea lion": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 66
+  },
+  "striped dolphin": {
+    "train": 0,
+    "test": 10,
+    "total": 10,
+    "label_id": 67
+  },
+  "vaquita": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 68
+  },
+  "walrus": {
+    "train": 40,
+    "test": 2,
+    "total": 42,
+    "label_id": 69
+  },
+  "weddell seal": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 70
+  },
+  "west african manatee": {
+    "train": 0,
+    "test": 5,
+    "total": 5,
+    "label_id": 71
+  },
+  "west indian manatee": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 72
+  },
+  "whale": {
+    "train": 0,
+    "test": 0,
+    "total": 0,
+    "label_id": 83
+  },
+  "white-beaked dolphin": {
+    "train": 0,
+    "test": 6,
+    "total": 6,
+    "label_id": 73
+  },
+  "white-sided dolphin": {
+    "train": 0,
+    "test": 7,
+    "total": 7,
+    "label_id": 74
+  }
+}

@@ -1,6 +1,37 @@
-env/
-datasets/
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pt
+*.py[cod]
+*$py.class
+
+# Logs
+logs/
+*.log
+eval_output.txt
+events.out.tfevents.*
+
+# PyTorch & HuggingFace Models
 *.pth
+*.pt
 *.ckpt
+*.safetensors
+*.bin
+
+# Datasets & Large Files
+datasets/audio_dataset/audio_split/
+datasets/image_dataset/test/
+datasets/image_dataset/train/
+datasets/text_dataset/test/
+datasets/text_dataset/train/
+datasets/marine_mammal_test/
+
+# Keep reports and scripts
+!*.py
+!*.md
+!*.json
+!*.yaml
+!*.txt
+!*.csv
+
+# Secrets
+.env
+env/

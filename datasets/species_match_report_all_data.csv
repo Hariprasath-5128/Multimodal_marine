@@ -1,0 +1,76 @@
+shared_label,taxonomy,has_image,image_count,image_source,has_audio,audio_count,audio_source,status
+amazon river dolphin,cetaceans,True,29,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+amazonian manatee,sirenians,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+atlantic humpback dolphin,cetaceans,True,15,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+atlantic spotted dolphin,cetaceans,True,27,HuggingFace dataset,True,58,HuggingFace dataset,MATCHED
+australian sea lion,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+baikal seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+bearded seal,pinnipeds,False,0,MISSING → will download,True,37,HuggingFace dataset,UNMATCHED
+beluga whale,cetaceans,True,17,HuggingFace dataset,True,50,HuggingFace dataset,MATCHED
+bolivian river dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+bottlenose dolphin,cetaceans,False,0,MISSING → will download,True,24,HuggingFace dataset,UNMATCHED
+bowhead whale,cetaceans,True,20,HuggingFace dataset,True,60,HuggingFace dataset,MATCHED
+burmeisters porpoise,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+burrunan dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+california sea lion,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+caspian seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+clymene dolphin,cetaceans,True,23,HuggingFace dataset,True,63,HuggingFace dataset,MATCHED
+common dolphin,cetaceans,True,60,HuggingFace dataset,True,52,HuggingFace dataset,MATCHED
+dalls porpoise,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+dugong,sirenians,True,18,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+dusky dolphin,cetaceans,True,21,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+dwarf sperm whale,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+false killer whale,cetaceans,True,20,HuggingFace dataset,True,59,HuggingFace dataset,MATCHED
+fin whale,cetaceans,True,25,HuggingFace dataset,True,50,HuggingFace dataset,MATCHED
+fraser's dolphin,cetaceans,False,0,MISSING → will download,True,87,HuggingFace dataset,UNMATCHED
+gray whale,cetaceans,True,29,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+grey seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+guiana dolphin,cetaceans,True,17,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+harbour porpoise,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+harp seal,pinnipeds,True,40,HuggingFace dataset,True,47,HuggingFace dataset,MATCHED
+heavisides dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+hectors dolphin,cetaceans,True,38,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+hooded seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+hourglass dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+humpback whale,cetaceans,True,20,HuggingFace dataset,True,64,HuggingFace dataset,MATCHED
+indo-pacific bottlenose dolphin,cetaceans,True,22,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+indo-pacific finless porpoise,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+indo-pacific humpbacked dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+irrawaddy dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+killer whale,cetaceans,True,20,HuggingFace dataset,True,35,HuggingFace dataset,MATCHED
+la plata dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+leopard seal,pinnipeds,True,20,HuggingFace dataset,True,10,HuggingFace dataset,MATCHED
+long-finned pilot whale,cetaceans,False,0,MISSING → will download,True,70,HuggingFace dataset,UNMATCHED
+mediterranean monk seal,pinnipeds,True,18,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+melon-headed whale,cetaceans,False,0,MISSING → will download,True,63,HuggingFace dataset,UNMATCHED
+minke whale,cetaceans,False,0,MISSING → will download,True,17,HuggingFace dataset,UNMATCHED
+narwhal,cetaceans,True,20,HuggingFace dataset,True,50,HuggingFace dataset,MATCHED
+new zealand sea lion,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+north atlantic right whale,cetaceans,False,0,MISSING → will download,True,54,HuggingFace dataset,UNMATCHED
+northern elephant seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+orca,cetaceans,True,41,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+pantropical spotted dolphin,cetaceans,False,0,MISSING → will download,True,66,HuggingFace dataset,UNMATCHED
+polar bear,ursids,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+right whale,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+ringed seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+risso's dolphin,cetaceans,True,20,HuggingFace dataset,True,67,HuggingFace dataset,MATCHED
+ross seal,pinnipeds,False,0,MISSING → will download,True,50,HuggingFace dataset,UNMATCHED
+rough-toothed dolphin,cetaceans,False,0,MISSING → will download,True,50,HuggingFace dataset,UNMATCHED
+sea otter,mustelids,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+short-finned pilot whale,cetaceans,False,0,MISSING → will download,True,67,HuggingFace dataset,UNMATCHED
+south american sea lion,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+south asian river dolphin,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+southern elephant seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+southern right whale,cetaceans,False,0,MISSING → will download,True,25,HuggingFace dataset,UNMATCHED
+sperm whale,cetaceans,True,20,HuggingFace dataset,True,75,HuggingFace dataset,MATCHED
+spinner dolphin,cetaceans,True,22,HuggingFace dataset,True,114,HuggingFace dataset,MATCHED
+spotted seal,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+steller sea lion,pinnipeds,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+striped dolphin,cetaceans,True,37,HuggingFace dataset,True,81,HuggingFace dataset,MATCHED
+vaquita,cetaceans,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+walrus,pinnipeds,True,40,HuggingFace dataset,True,38,HuggingFace dataset,MATCHED
+weddell seal,pinnipeds,True,20,HuggingFace dataset,True,2,HuggingFace dataset,MATCHED
+west african manatee,sirenians,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+west indian manatee,sirenians,True,20,HuggingFace dataset,False,0,MISSING → will download,UNMATCHED
+white-beaked dolphin,cetaceans,True,20,HuggingFace dataset,True,57,HuggingFace dataset,MATCHED
+white-sided dolphin,cetaceans,True,24,HuggingFace dataset,True,55,HuggingFace dataset,MATCHED
