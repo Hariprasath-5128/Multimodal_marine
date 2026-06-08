@@ -15,9 +15,9 @@
 ## 3. Dataset Summary
 | Metric | Value |
 |--------|-------|
-| **Total Samples** | 460 images |
-| **Training** | 98 images |
-| **Test** | 362 images |
+| **Total Samples** | 1909 images |
+| **Training** | 1518 images |
+| **Test** | 391 images |
 | **Classes** | 71 |
 
 **Class Distribution:** Severe class imbalance, handled via square-root Weighted Random Sampling.  

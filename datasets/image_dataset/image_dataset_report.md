@@ -10,10 +10,10 @@
 ## 2. Dataset Statistics
 | Metric | Value |
 |--------|-------|
-| **Total samples** | 460 images |
+| **Total samples** | 1909 images |
 | **Number of classes** | 71 species |
-| **Training samples** | 98 images |
-| **Testing samples** | 362 images |
+| **Training samples** | 1518 images |
+| **Testing samples** | 391 images |
 | **Image Resolution** | Mostly 224x224 to 288x288 RGB |
 
 *Note: The dataset has been explicitly split into `train` and `test` directories by species.*
@@ -43,4 +43,4 @@ datasets/
 The `shared_label_ids_for_image_only.json` file has been updated to include `"train"`, `"test"`, and `"total"` counts per species, acting as the definitive ground truth for distribution. 
 
 ### Imbalance Discussion
-The dataset is highly imbalanced in its current state (Train: 98, Test: 362). Because the training set is very small compared to the test set, models trained on this dataset will rely heavily on pre-trained backbones (like ConvNeXt or ViT) and strong data augmentation to generalize well without overfitting.
+The dataset previously had a very small training set compared to the test set, but it has since been expanded. Currently, there are 1518 training images across 10 classes, and 391 testing images spread across 71 classes. While the overall size is better, there is still a significant class imbalance since many species in the test set do not have corresponding training data, and the classes that do have training data are unevenly distributed. Models will likely still need strong augmentation or pre-trained backbones.
