@@ -24,7 +24,7 @@ Usage
 
     db       = MarineVectorDB()
     pipeline = MarineImageBindPipeline()
-    pipeline.load_state_dict(torch.load("checkpoints/best_multimodal_pipeline.pth")["model_state"])
+    pipeline.load_state_dict(torch.load("trained_projection_heads/best_multimodal_pipeline.pth")["model_state"])
     pipeline.eval()
 
     # ── Index all val embeddings ──────────────────────────────────────────

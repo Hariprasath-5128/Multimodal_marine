@@ -16,8 +16,8 @@ PROJECT_ROOT  = os.path.abspath(os.path.join(BASE_DIR, ".."))
 # Where feature_extractor.py writes its .pt files
 EMBEDDING_DIR = os.path.join(BASE_DIR, "extracted_features")
 
-# Where train.py saves checkpoints
-CHECKPOINT_DIR  = os.path.join(BASE_DIR, "checkpoints")
+# Where train.py saves trained_projection_heads
+CHECKPOINT_DIR  = os.path.join(BASE_DIR, "trained_projection_heads")
 CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_multimodal_pipeline.pth")
 
 # ── Upstream Dataset Paths (used by feature_extractor.py) ─────────────────────

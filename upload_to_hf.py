@@ -70,9 +70,9 @@ zip_and_upload(
     "training/image_classification"
 )
 
-# 3. Multimodal Checkpoints
+# 3. Multimodal trained_projection_heads
 zip_and_upload(
-    r"C:\Projects\marine\marine_alignment\checkpoints",
+    r"C:\Projects\marine\marine_alignment\trained_projection_heads",
     "marine_alignment"
 )
 # 4. Multimodal Extracted Features Zip
