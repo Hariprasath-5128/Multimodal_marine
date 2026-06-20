@@ -36,3 +36,5 @@ datasets/marine_mammal_test/
 .env
 env/
 marine_alignment/extracted_features.zip
+
+marine_alignment/best_multimodal_pipeline_backup.pth
