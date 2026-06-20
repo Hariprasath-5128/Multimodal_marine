@@ -5,8 +5,9 @@ import numpy as np
 from transformers import AutoTokenizer
 
 # Configuration for Test Data
-INPUT_DIR = r"C:\Projects\marine\datasets\text_dataset\train_dataset"
-OUTPUT_DIR = r"C:\Projects\marine\datasets\text_dataset\expanded_test_dataset"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INPUT_DIR = os.path.join(BASE_DIR, "train_dataset")
+OUTPUT_DIR = os.path.join(BASE_DIR, "expanded_test_dataset")
 QA_REPORT_PATH = os.path.join(OUTPUT_DIR, "_Test_Dataset_QA_Report.txt")
 
 MODEL = "llama3:8b"

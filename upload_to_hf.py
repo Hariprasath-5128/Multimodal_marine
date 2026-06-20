@@ -5,7 +5,8 @@ from huggingface_hub import HfApi, login
 # 1. Login using your saved token from env/.env
 token = None
 try:
-    with open(r"C:\Projects\marine\env\.env", "r") as f:
+    local_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(local_dir, "env", ".env"), "r") as f:
         token = f.read().strip()
     login(token)
 except Exception as e:
@@ -22,7 +23,7 @@ api = HfApi()
 
 # 2. Define your repository details
 REPO_ID = "Hariprasath5128/marine-multimodel"
-LOCAL_DIR = r"C:\Projects\marine"
+LOCAL_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_TYPE = "model"
 
 print(f"\nTarget repository: {REPO_ID} on Hugging Face")
@@ -60,26 +61,27 @@ def zip_and_upload(folder_path, repo_dir):
 
 # 1. Audio Classification Model
 zip_and_upload(
-    r"C:\Projects\marine\training\audio_classification\marine_audio_classification_model",
+    os.path.join(LOCAL_DIR, "training", "audio_classification", "marine_audio_classification_model"),
     "training/audio_classification"
 )
 
 # 2. Image Classification Models
 zip_and_upload(
-    r"C:\Projects\marine\training\image_classification\models",
+    os.path.join(LOCAL_DIR, "training", "image_classification", "models"),
     "training/image_classification"
 )
 
 # 3. Multimodal trained_projection_heads
 zip_and_upload(
-    r"C:\Projects\marine\marine_alignment\trained_projection_heads",
+    os.path.join(LOCAL_DIR, "marine_alignment", "trained_projection_heads"),
     "marine_alignment"
 )
 # 4. Multimodal Extracted Features Zip
 print("\nUploading Extracted Features Zip...")
-if os.path.exists(r"C:\Projects\marine\marine_alignment\extracted_features.zip"):
+zip_path = os.path.join(LOCAL_DIR, "marine_alignment", "extracted_features.zip")
+if os.path.exists(zip_path):
     api.upload_file(
-        path_or_fileobj=r"C:\Projects\marine\marine_alignment\extracted_features.zip",
+        path_or_fileobj=zip_path,
         path_in_repo="marine_alignment/extracted_features.zip",
         repo_id=REPO_ID,
         repo_type=REPO_TYPE,
@@ -88,7 +90,7 @@ if os.path.exists(r"C:\Projects\marine\marine_alignment\extracted_features.zip")
 # 5. Rest of the Codebase (Scripts, Markdown, etc)
 print("\nUploading Codebase Scripts...")
 api.upload_folder(
-    folder_path=r"C:\Projects\marine",
+    folder_path=LOCAL_DIR,
     repo_id=REPO_ID,
     repo_type=REPO_TYPE,
     ignore_patterns=[".git", ".git/**", "__pycache__", "*.log", "env/**", "datasets/**", "marine_alignment/extracted_features/**", "*.pth", "*.pt", "*.bin", "*.safetensors"], 
