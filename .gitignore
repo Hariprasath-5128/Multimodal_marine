@@ -34,7 +34,9 @@ datasets/marine_mammal_test/
 
 # Secrets
 .env
-env/
+
+# Marine MultiModel Alignment's Projections Head
 marine_alignment/extracted_features.zip
 
 marine_alignment/best_multimodal_pipeline_backup.pth
+marine_alignment/best_multimodal_pipeline_backup_old.pth
