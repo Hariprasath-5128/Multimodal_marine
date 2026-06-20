@@ -53,50 +53,47 @@ class DoubleNormProjectionHead(nn.Module):
       nn.LayerNorm(output_dim)
       L2-norm (unit-sphere)
     Output [output_dim]
-
-    Parameters
-    ----------
-    input_dim  : int   — dimension of the frozen encoder output
-    output_dim : int   — target shared latent dimension
-    hidden_dim : int   — intermediate MLP width (default: 512)
-    dropout    : float — dropout probability (default: 0.3)
+    High-Capacity Deep Residual Projection Head.
+    Maps raw frozen embeddings (1024-D, 768-D) to the shared latent space.
     """
-
-    def __init__(
-        self,
-        input_dim:  int,
-        output_dim: int = SHARED_DIM,
-        hidden_dim: int | None = None,
-        dropout:    float = 0.3,
-    ):
+    def __init__(self, input_dim: int, output_dim: int):
         super().__init__()
-        if hidden_dim is None:
-            hidden_dim = 512        # Reduced from 1536 to prevent overfitting
+        hidden_dim = max(input_dim, output_dim * 2)
 
-        self.linear1  = nn.Linear(input_dim,  hidden_dim)
-        self.act      = nn.GELU()
-        self.drop     = nn.Dropout(p=dropout)
-        self.linear2  = nn.Linear(hidden_dim, output_dim)
+        self.block1 = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.GELU(),
+            nn.Dropout(0.2),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.GELU(),
+            nn.Dropout(0.2)
+        )
+        self.shortcut1 = nn.Linear(input_dim, hidden_dim) if input_dim != hidden_dim else nn.Identity()
+
+        self.block2 = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.GELU(),
+            nn.Dropout(0.2),
+            nn.Linear(hidden_dim, output_dim),
+        )
+        self.shortcut2 = nn.Linear(hidden_dim, output_dim)
+        
         self.norm_out = nn.LayerNorm(output_dim)
 
-        # TRUE residual shortcut: input x -> output dimension
-        # This provides a gradient highway all the way from output to input.
-        self.shortcut = nn.Linear(input_dim, output_dim, bias=False)
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # Step 1 — Input L2 normalisation
+        # Input normalisation
         x_norm = F.normalize(x, p=2, dim=-1)
 
-        # Step 2 — First projection + activation + dropout
-        h = self.drop(self.act(self.linear1(x_norm)))   # [B, hidden_dim]
+        # Residual Block 1
+        h1 = self.block1(x_norm) + self.shortcut1(x_norm)
+        
+        # Residual Block 2
+        h2 = self.block2(h1) + self.shortcut2(h1)
 
-        # Step 3 — Deep path + TRUE residual from input (not from h!)
-        out = self.linear2(h) + self.shortcut(x_norm)   # [B, output_dim]
+        # Structural normalisation
+        out = self.norm_out(h2)
 
-        # Step 4 — Structural normalisation
-        out = self.norm_out(out)
-
-        # Step 5 — Output L2 normalisation -> unit hyper-sphere
+        # Output L2 normalisation -> unit hyper-sphere
         return F.normalize(out, p=2, dim=-1)
 
 
@@ -104,14 +101,8 @@ class DoubleNormProjectionHead(nn.Module):
 
 class MarineImageBindPipeline(nn.Module):
     """
-    Three modality-specific projection heads that translate each
-    frozen encoder's output into the shared 768-D latent space.
-
-    Only the projection heads are trained; the upstream encoders are
-    kept frozen and are not part of this module.
-
-    Attributes
-    ----------
+    Marine Multimodal Alignment Pipeline
+    ------------------------------------
     image_head : DoubleNormProjectionHead  IMG_INPUT_DIM -> 768
     text_head  : DoubleNormProjectionHead  TXT_INPUT_DIM -> 768
     audio_head : DoubleNormProjectionHead  AUD_INPUT_DIM -> 768
@@ -125,6 +116,7 @@ class MarineImageBindPipeline(nn.Module):
         out_dim:  int = SHARED_DIM,
     ):
         super().__init__()
+        
         self.image_head = DoubleNormProjectionHead(img_dim, out_dim)
         self.text_head  = DoubleNormProjectionHead(txt_dim, out_dim)
         self.audio_head = DoubleNormProjectionHead(aud_dim, out_dim)
@@ -144,11 +136,11 @@ class MarineImageBindPipeline(nn.Module):
         Returns a dict of projected embeddings for whichever
         modalities are provided.
         """
-        out = {"image": self.image_head(image_emb)}
+        out = {"image": self.project_image(image_emb)}
         if text_emb  is not None:
-            out["text"]  = self.text_head(text_emb)
+            out["text"]  = self.project_text(text_emb)
         if audio_emb is not None:
-            out["audio"] = self.audio_head(audio_emb)
+            out["audio"] = self.project_audio(audio_emb)
         return out
 
     def param_summary(self):
