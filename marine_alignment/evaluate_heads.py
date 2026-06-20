@@ -49,6 +49,57 @@ from dataset import (
 
 from models import MarineImageBindPipeline
 
+"""
+evaluate_heads.py — Test-Set Evaluation of the Trained Projection Heads
+=========================================================================
+All data-split decisions are delegated to dataset.py.
+This script only handles:
+  1. Loading the trained checkpoint.
+  2. Loading the three frozen encoders on-the-fly.
+  3. Encoding raw test samples through the frozen encoder + trained head.
+  4. Computing Recall@1/5/10 for Image->Text and Image->Audio retrieval.
+  5. Printing a results table and saving a JSON report.
+
+Data Sources (resolved by dataset.py, with automatic fallbacks)
+---------------------------------------------------------------
+  Image  : image_dataset/test/           -> fallback: image_dataset/train/
+  Text   : text_dataset/test/expanded_test_dataset/ -> fallback: train/
+  Audio  : audio_split/val/              -> per-species fallback: train/
+
+Usage
+-----
+    python marine_alignment/evaluate_heads.py
+    python marine_alignment/evaluate_heads.py --device cpu
+    python marine_alignment/evaluate_heads.py --per_species
+"""
+
+import os
+import sys
+import json
+import argparse
+
+import torch
+import torch.nn.functional as F
+from tqdm import tqdm
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from config import (
+    CHECKPOINT_PATH, DEVICE,
+    IMAGE_MODEL_DIR, TEXT_MODEL_DIR, AUDIO_MODEL_PATH, AST_PRETRAINED_ID,
+    AUDIO_SAMPLE_RATE, AUDIO_TARGET_SECONDS,
+    RECALL_WEIGHT_R1, RECALL_WEIGHT_R5, RECALL_WEIGHT_R10,
+)
+
+# All split logic lives in dataset.py
+from dataset import (
+    get_test_image_split,
+    get_test_text_split,
+    get_test_audio_split,
+)
+
+from models import MarineImageBindPipeline
+
 REPORT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "test_evaluation_report.json"
@@ -59,42 +110,41 @@ REPORT_PATH = os.path.join(
 # Frozen encoder loaders
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _load_image_encoder(device: str):
-    import timm
+def _get_image_transform():
     from torchvision import transforms
-    from pathlib import Path
-
-    ckpts = sorted(Path(IMAGE_MODEL_DIR).glob("*_seed42.pth"))
-    if not ckpts:
-        raise FileNotFoundError(f"No *_seed42.pth in {IMAGE_MODEL_DIR}")
-    ck = torch.load(ckpts[0], map_location="cpu", weights_only=False)
-    bb_name  = ck.get("backbone", "convnextv2_base")
-    img_size = ck.get("img_size", 288)
-
-    backbone = timm.create_model(bb_name, pretrained=False,
-                                  num_classes=0, global_pool="avg")
-    bb_sd = {k[len("backbone."):]: v
-             for k, v in ck["model_state_dict"].items()
-             if k.startswith("backbone.")}
-    backbone.load_state_dict(bb_sd, strict=True)
-    backbone.eval().to(device)
-
-    tfm = transforms.Compose([
-        transforms.Resize((img_size, img_size)),
+    # 288 is the standard training size for ConvNeXt
+    return transforms.Compose([
+        transforms.Resize((288, 288)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225]),
     ])
-    return backbone, tfm
 
+
+def _load_image_encoder(device: str):
+    import timm
+    from pathlib import Path
+    from config import IMAGE_MODEL_DIR
+    ckpt_paths = sorted(Path(IMAGE_MODEL_DIR).glob("*_seed42.pth"))
+    if not ckpt_paths:
+        raise FileNotFoundError(f"No *_seed42.pth found in {IMAGE_MODEL_DIR}")
+    ckpt = torch.load(ckpt_paths[0], map_location="cpu", weights_only=False)
+    bb_name = ckpt.get("backbone", "convnextv2_base")
+    model = timm.create_model("convnextv2_base", pretrained=False, num_classes=0, global_pool="avg")
+    bb_sd = {k[len("backbone."):]: v for k, v in ckpt["model_state_dict"].items() if k.startswith("backbone.")}
+    model.load_state_dict(bb_sd, strict=True)
+    model.eval()
+    model.to(device)
+    return model
 
 @torch.no_grad()
-def _encode_image(backbone, tfm, img_path: str, device: str) -> torch.Tensor:
+def _encode_image(pipeline, bb, tfm, img_path: str, device: str) -> torch.Tensor:
     from PIL import Image
     import pillow_avif
     img = Image.open(img_path).convert("RGB")
     t   = tfm(img).unsqueeze(0).to(device)
-    return backbone(t).squeeze(0).cpu()
+    features = bb(t)
+    return pipeline.project_image(features).squeeze(0).cpu()
 
 
 def _load_text_encoder(device: str):
@@ -236,7 +286,7 @@ def main(args):
     # ── Load trained pipeline ─────────────────────────────────────────────────
     pipeline = MarineImageBindPipeline().to(device)
     ckpt = torch.load(CHECKPOINT_PATH, map_location=device, weights_only=False)
-    pipeline.load_state_dict(ckpt["model_state"])
+    pipeline.load_state_dict(ckpt["model_state"], strict=False)
     pipeline.eval()
     print(f"\n[Checkpoint] Epoch {ckpt['epoch']}, "
           f"Val composite = {ckpt['composite_score']:.4f}")
@@ -269,8 +319,9 @@ def main(args):
 
     # ── Load frozen encoders ──────────────────────────────────────────────────
     print("\nLoading frozen encoders ...")
-    print("  [Image] ConvNeXtV2 backbone ...")
-    img_bb, img_tfm = _load_image_encoder(device)
+    print("  [Image] Transform only (ConvNeXt is now in the pipeline)")
+    img_tfm = _get_image_transform()
+    img_enc = _load_image_encoder(device)
 
     print("  [Text]  SentenceTransformer ...")
     txt_enc = _load_text_encoder(device)
@@ -324,9 +375,7 @@ def main(args):
         if sp not in sp2id:
             continue
         try:
-            raw  = _encode_image(img_bb, img_tfm, img_path, device)
-            with torch.no_grad():
-                proj = pipeline.image_head(raw.unsqueeze(0).to(device)).squeeze(0).cpu()
+            proj = _encode_image(pipeline, img_enc, img_tfm, img_path, device)
             img_emb_list.append(proj)
             img_lbl_list.append(sp2id[sp])
             img_sp_list.append(sp)

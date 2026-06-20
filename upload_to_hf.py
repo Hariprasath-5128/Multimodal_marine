@@ -28,42 +28,70 @@ REPO_TYPE = "model"
 print(f"\nTarget repository: {REPO_ID} on Hugging Face")
 
 # ==========================================
-# PHASE 1: COMPRESS AND UPLOAD DATASET
+# EXPLICIT MODEL DIRECTORY UPLOADS
 # ==========================================
-DATASET_DIR = os.path.join(LOCAL_DIR, "datasets")
-ZIP_PATH = os.path.join(LOCAL_DIR, "marine_datasets_archive.zip")
+print("\n--- UPLOADING MODELS EXPLICITLY ---")
+print("Bypassing the root .gitignore by targeting the model folders directly...")
 
-if not os.path.exists(ZIP_PATH):
-    print("\n--- PHASE 1: COMPRESSING DATASETS ---")
-    print("Compressing datasets into a single ZIP file to bypass the 1,000 file rate limit...")
-    print("This may take a few minutes depending on the dataset size...")
-    shutil.make_archive(r"C:\Projects\marine\marine_datasets_archive", 'zip', DATASET_DIR)
-    print(f"Successfully created {ZIP_PATH}")
-else:
-    print(f"\n--- PHASE 1: DATASETS ALREADY COMPRESSED ---")
-    print(f"Found existing zip file: {ZIP_PATH}")
+def zip_and_upload(folder_path, repo_dir):
+    if not os.path.exists(folder_path):
+        print(f"Skipping {folder_path} because it doesn't exist.")
+        return
+        
+    folder_name = os.path.basename(folder_path)
+    zip_path = folder_path + ".zip"
+    
+    print(f"\nZipping {folder_name}...")
+    shutil.make_archive(folder_path, 'zip', folder_path)
+    
+    zip_name = folder_name + ".zip"
+    remote_path = f"{repo_dir}/{zip_name}"
+    
+    print(f"Uploading {zip_name} to {remote_path}...")
+    api.upload_file(
+        path_or_fileobj=zip_path,
+        path_in_repo=remote_path,
+        repo_id=REPO_ID,
+        repo_type=REPO_TYPE,
+    )
+    
+    print(f"Deleting local zip {zip_path}...")
+    os.remove(zip_path)
 
-print("Uploading compressed datasets...")
-api.upload_file(
-    path_or_fileobj=ZIP_PATH,
-    path_in_repo="marine_datasets_archive.zip",
-    repo_id=REPO_ID,
-    repo_type=REPO_TYPE,
-)
-print("Dataset upload complete!")
-
-# ==========================================
-# PHASE 2: UPLOAD CODE AND MODELS
-# ==========================================
-print("\n--- PHASE 2: UPLOADING CODEBASE AND MODELS ---")
-print("Using upload_large_folder() to handle heavy model weights...")
-
-# Uploading folder (We ignore the raw datasets here because we already uploaded the ZIP!)
-api.upload_large_folder(
-    folder_path=LOCAL_DIR,
-    repo_id=REPO_ID,
-    repo_type=REPO_TYPE,
-    ignore_patterns=[".git", "__pycache__", "*.log", "eval_output.txt", "datasets/*"], 
+# 1. Audio Classification Model
+zip_and_upload(
+    r"C:\Projects\marine\training\audio_classification\marine_audio_classification_model",
+    "training/audio_classification"
 )
 
-print(f"\nAll Uploads Complete! View your entire project here: https://huggingface.co/{REPO_ID}")
+# 2. Image Classification Models
+zip_and_upload(
+    r"C:\Projects\marine\training\image_classification\models",
+    "training/image_classification"
+)
+
+# 3. Multimodal Checkpoints
+zip_and_upload(
+    r"C:\Projects\marine\marine_alignment\checkpoints",
+    "marine_alignment"
+)
+# 4. Multimodal Extracted Features Zip
+print("\nUploading Extracted Features Zip...")
+if os.path.exists(r"C:\Projects\marine\marine_alignment\extracted_features.zip"):
+    api.upload_file(
+        path_or_fileobj=r"C:\Projects\marine\marine_alignment\extracted_features.zip",
+        path_in_repo="marine_alignment/extracted_features.zip",
+        repo_id=REPO_ID,
+        repo_type=REPO_TYPE,
+    )
+
+# 5. Rest of the Codebase (Scripts, Markdown, etc)
+print("\nUploading Codebase Scripts...")
+api.upload_folder(
+    folder_path=r"C:\Projects\marine",
+    repo_id=REPO_ID,
+    repo_type=REPO_TYPE,
+    ignore_patterns=[".git", ".git/**", "__pycache__", "*.log", "env/**", "datasets/**", "marine_alignment/extracted_features/**", "*.pth", "*.pt", "*.bin", "*.safetensors"], 
+)
+
+print(f"\nAll Uploads Complete! View your project here: https://huggingface.co/{REPO_ID}")

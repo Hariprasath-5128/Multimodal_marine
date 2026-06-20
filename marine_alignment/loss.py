@@ -41,6 +41,7 @@ def supervised_contrastive_loss(
     anchor_feats:     torch.Tensor,
     target_feats:     torch.Tensor,
     labels:           torch.Tensor,
+    target_labels:    torch.Tensor = None,
     temperature:      float = 0.07,
     hard_neg_count:   int   = 20,
     exclude_diagonal: bool  = False,
@@ -51,8 +52,9 @@ def supervised_contrastive_loss(
     Parameters
     ----------
     anchor_feats     : FloatTensor [B, D]  — L2-normalised image projections
-    target_feats     : FloatTensor [B, D]  — L2-normalised text/audio projections
-    labels           : LongTensor  [B]     — integer species IDs
+    target_feats     : FloatTensor [M, D]  — L2-normalised text/audio projections
+    labels           : LongTensor  [B]     — integer species IDs for anchors
+    target_labels    : LongTensor  [M]     — integer species IDs for targets. Defaults to labels if None.
     temperature      : float               — softmax sharpening factor (tau)
     hard_neg_count   : int                 — number of hard negatives to keep per
                                              anchor. If 0, all negatives are used.
@@ -72,14 +74,21 @@ def supervised_contrastive_loss(
             f"supervised_contrastive_loss requires batch_size >= 2, got {batch_size}."
         )
 
-    # ── Similarity Logits  [B x B] ────────────────────────────────────────────
+    if target_labels is None:
+        target_labels = labels
+
+    # ── Similarity Logits  [B x M] ────────────────────────────────────────────
     similarity_matrix = torch.matmul(anchor_feats, target_feats.T) / temperature
 
-    # ── Positive Mask  [B x B]  ───────────────────────────────────────────────
+    # ── Positive Mask  [B x M]  ───────────────────────────────────────────────
     labels_col    = labels.unsqueeze(1)                             # [B, 1]
-    label_matches = torch.eq(labels_col, labels_col.T).float()      # [B, B]
+    target_labels_row = target_labels.unsqueeze(0)                  # [1, M]
+    label_matches = torch.eq(labels_col, target_labels_row).float() # [B, M]
 
-    eye = torch.eye(batch_size, device=labels.device)
+    M = target_feats.size(0)
+    # If M == B, we assume standard row-aligned batches. If M != B, we assume 
+    # the diagonal is just the first B elements, or we construct a rectangular eye.
+    eye = torch.eye(batch_size, M, device=labels.device)
 
     if exclude_diagonal:
         # Intra-modal: self-comparisons are trivially perfect (sim=1.0)
@@ -95,11 +104,11 @@ def supervised_contrastive_loss(
         sim_base = similarity_matrix
 
     # Negative mask: different-label pairs (diagonal never selected as negative)
-    negative_mask = (1.0 - label_matches) * (1.0 - eye)            # [B, B]
+    negative_mask = (1.0 - label_matches) * (1.0 - eye)            # [B, M]
 
     # ── Hard Negative Mining ──────────────────────────────────────────────────
     if hard_neg_count > 0:
-        k = min(hard_neg_count, batch_size - 1)
+        k = min(hard_neg_count, M - 1)
 
         if k > 0:
             # Mask positives so they aren't selected as hard negatives

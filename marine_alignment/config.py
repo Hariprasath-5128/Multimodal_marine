@@ -56,7 +56,7 @@ SHARED_DIM = 768
 
 # ── Training Hyperparameters ───────────────────────────────────────────────────
 TEMPERATURE  = 0.07
-BATCH_SIZE   = 32
+BATCH_SIZE   = 8
 LEARNING_RATE = 1e-4
 WEIGHT_DECAY  = 5e-5
 EPOCHS        = 50

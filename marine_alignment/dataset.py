@@ -212,6 +212,23 @@ class MarineFeatureDataset(Dataset):
         self.embedding_dir = embedding_dir
         self.species_to_idx, _, _ = get_registry(embedding_dir)
 
+    def _build_image_mapping(self):
+        import glob
+        from collections import defaultdict
+        self.image_paths_per_species = defaultdict(list)
+        # Using the exact same logic as feature_extractor.py to guarantee matching indices
+        train_root = os.path.join(PROJECT_ROOT, "datasets", "image_dataset", "train")
+        for domain in sorted(os.listdir(train_root)):
+            domain_dir = os.path.join(train_root, domain)
+            if not os.path.isdir(domain_dir): continue
+            for species_folder in sorted(os.listdir(domain_dir)):
+                species_dir = os.path.join(domain_dir, species_folder)
+                if not os.path.isdir(species_dir): continue
+                species_key = canonical(species_folder)
+                for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.avif"):
+                    for p in sorted(glob.glob(os.path.join(species_dir, ext))):
+                        self.image_paths_per_species[species_key].append(p)
+
     def __len__(self) -> int:
         return len(self.file_list)
 
@@ -243,10 +260,13 @@ class MarineFeatureDataset(Dataset):
         species_name = data["species_name"]
         species_id   = self.species_to_idx[species_name]
 
-        # ── Image — always present ─────────────────────────────────────────────
-        image_emb = data["image_emb"].float().squeeze()
-        if image_emb.dim() == 0:
-            image_emb = image_emb.unsqueeze(0)
+        # ── Image — Pre-computed Embeddings ──────────────────────────────────────────
+        # Load the frozen 1024-D image embedding from the .pt file directly.
+        # This reduces I/O bottleneck and removes the need for ConvNeXt forward passes.
+        if "image_emb" in data and data["image_emb"] is not None:
+            image_tensor = data["image_emb"].float().squeeze()
+        else:
+            image_tensor = torch.zeros(IMG_INPUT_DIM, dtype=torch.float32)
 
         # ── Text — dynamic subset average (Priority 2) ─────────────────────────
         # New format: "text_embs" -> [N_docs, 768]
@@ -286,13 +306,13 @@ class MarineFeatureDataset(Dataset):
             has_audio = False
 
         return {
-            "image_emb":  image_emb,
-            "text_emb":   text_emb,
-            "audio_emb":  audio_emb,
-            "has_text":   torch.tensor(has_text,   dtype=torch.bool),
-            "has_audio":  torch.tensor(has_audio,  dtype=torch.bool),
-            "species_id": torch.tensor(species_id, dtype=torch.long),
-            "file_name":  fname,
+            "image_tensor": image_tensor,
+            "text_emb":     text_emb,
+            "audio_emb":    audio_emb,
+            "has_text":     torch.tensor(has_text,   dtype=torch.bool),
+            "has_audio":    torch.tensor(has_audio,  dtype=torch.bool),
+            "species_id":   torch.tensor(species_id, dtype=torch.long),
+            "file_name":    fname,
         }
 
 

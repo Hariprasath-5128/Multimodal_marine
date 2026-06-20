@@ -35,3 +35,4 @@ datasets/marine_mammal_test/
 # Secrets
 .env
 env/
+marine_alignment/extracted_features.zip
