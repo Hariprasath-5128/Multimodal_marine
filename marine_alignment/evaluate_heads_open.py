@@ -1,5 +1,5 @@
 """
-evaluate_heads.py — Test-Set Evaluation of the Trained Projection Heads
+evaluate_heads.py ΓÇö Test-Set Evaluation of the Trained Projection Heads
 =========================================================================
 All data-split decisions are delegated to dataset.py.
 This script only handles:
@@ -34,7 +34,7 @@ from tqdm import tqdm
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import (
-    CHECKPOINT_PATH, DEVICE,
+    CHECKPOINT_PATH_OPEN, DEVICE,
     IMAGE_MODEL_DIR, TEXT_MODEL_DIR, AUDIO_MODEL_PATH, AST_PRETRAINED_ID,
     AUDIO_SAMPLE_RATE, AUDIO_TARGET_SECONDS,
     RECALL_WEIGHT_R1, RECALL_WEIGHT_R5, RECALL_WEIGHT_R10,
@@ -47,104 +47,54 @@ from dataset import (
     get_test_audio_split,
 )
 
-from models import MarineImageBindPipeline
-
-"""
-evaluate_heads.py — Test-Set Evaluation of the Trained Projection Heads
-=========================================================================
-All data-split decisions are delegated to dataset.py.
-This script only handles:
-  1. Loading the trained checkpoint.
-  2. Loading the three frozen encoders on-the-fly.
-  3. Encoding raw test samples through the frozen encoder + trained head.
-  4. Computing Recall@1/5/10 for Image->Text and Image->Audio retrieval.
-  5. Printing a results table and saving a JSON report.
-
-Data Sources (resolved by dataset.py, with automatic fallbacks)
----------------------------------------------------------------
-  Image  : image_dataset/test/           -> fallback: image_dataset/train/
-  Text   : text_dataset/test/expanded_test_dataset/ -> fallback: train/
-  Audio  : audio_split/val/              -> per-species fallback: train/
-
-Usage
------
-    python marine_alignment/evaluate_heads.py
-    python marine_alignment/evaluate_heads.py --device cpu
-    python marine_alignment/evaluate_heads.py --per_species
-"""
-
-import os
-import sys
-import json
-import argparse
-
-import torch
-import torch.nn.functional as F
-from tqdm import tqdm
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from config import (
-    CHECKPOINT_PATH, DEVICE,
-    IMAGE_MODEL_DIR, TEXT_MODEL_DIR, AUDIO_MODEL_PATH, AST_PRETRAINED_ID,
-    AUDIO_SAMPLE_RATE, AUDIO_TARGET_SECONDS,
-    RECALL_WEIGHT_R1, RECALL_WEIGHT_R5, RECALL_WEIGHT_R10,
-)
-
-# All split logic lives in dataset.py
-from dataset import (
-    get_test_image_split,
-    get_test_text_split,
-    get_test_audio_split,
-)
-
-from models import MarineImageBindPipeline
+from models_open import MarineImageBindPipeline
 
 REPORT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    "test_evaluation_report.json"
+    "test_evaluation_report_open.json"
 )
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 # Frozen encoder loaders
-# ─────────────────────────────────────────────────────────────────────────────
+# ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
-def _get_image_transform():
+def _load_image_encoder(device: str):
+    import timm
     from torchvision import transforms
-    # 288 is the standard training size for ConvNeXt
-    return transforms.Compose([
-        transforms.Resize((288, 288)),
+    from pathlib import Path
+
+    ckpts = sorted(Path(IMAGE_MODEL_DIR).glob("*_seed42.pth"))
+    if not ckpts:
+        raise FileNotFoundError(f"No *_seed42.pth in {IMAGE_MODEL_DIR}")
+    ck = torch.load(ckpts[0], map_location="cpu", weights_only=False)
+    bb_name  = ck.get("backbone", "convnextv2_base")
+    img_size = ck.get("img_size", 288)
+
+    backbone = timm.create_model(bb_name, pretrained=False,
+                                  num_classes=0, global_pool="avg")
+    bb_sd = {k[len("backbone."):]: v
+             for k, v in ck["model_state_dict"].items()
+             if k.startswith("backbone.")}
+    backbone.load_state_dict(bb_sd, strict=True)
+    backbone.eval().to(device)
+
+    tfm = transforms.Compose([
+        transforms.Resize((img_size, img_size)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225]),
     ])
+    return backbone, tfm
 
-
-def _load_image_encoder(device: str):
-    import timm
-    from pathlib import Path
-    from config import IMAGE_MODEL_DIR
-    ckpt_paths = sorted(Path(IMAGE_MODEL_DIR).glob("*_seed42.pth"))
-    if not ckpt_paths:
-        raise FileNotFoundError(f"No *_seed42.pth found in {IMAGE_MODEL_DIR}")
-    ckpt = torch.load(ckpt_paths[0], map_location="cpu", weights_only=False)
-    bb_name = ckpt.get("backbone", "convnextv2_base")
-    model = timm.create_model("convnextv2_base", pretrained=False, num_classes=0, global_pool="avg")
-    bb_sd = {k[len("backbone."):]: v for k, v in ckpt["model_state_dict"].items() if k.startswith("backbone.")}
-    model.load_state_dict(bb_sd, strict=True)
-    model.eval()
-    model.to(device)
-    return model
 
 @torch.no_grad()
-def _encode_image(pipeline, bb, tfm, img_path: str, device: str) -> torch.Tensor:
+def _encode_image(backbone, tfm, img_path: str, device: str) -> torch.Tensor:
     from PIL import Image
     import pillow_avif
     img = Image.open(img_path).convert("RGB")
     t   = tfm(img).unsqueeze(0).to(device)
-    features = bb(t)
-    return pipeline.project_image(features).squeeze(0).cpu()
+    return backbone(t).squeeze(0).cpu()
 
 
 def _load_text_encoder(device: str):
@@ -236,9 +186,9 @@ def _encode_audio_species(model, fe, hook, wav_paths: list[str],
     return F.normalize(mean_emb, p=2, dim=0)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 # Recall computation
-# ─────────────────────────────────────────────────────────────────────────────
+# ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 def _compute_recall(
     query_embs:    torch.Tensor,   # [Q, D]
@@ -266,9 +216,9 @@ def _composite(r: dict) -> float:
             + RECALL_WEIGHT_R10 * r.get(10, 0.0))
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 # Main
-# ─────────────────────────────────────────────────────────────────────────────
+# ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 
 def main(args):
     device = args.device
@@ -278,20 +228,20 @@ def main(args):
     print("  Marine Multimodal Alignment -- Head Evaluation")
     print("=" * 64)
 
-    if not os.path.exists(CHECKPOINT_PATH):
-        print(f"\n[ERROR] No checkpoint at:\n  {CHECKPOINT_PATH}")
+    if not os.path.exists(CHECKPOINT_PATH_OPEN):
+        print(f"\n[ERROR] No checkpoint at:\n  {CHECKPOINT_PATH_OPEN}")
         print("Run train.py first.\n")
         sys.exit(1)
 
     # ── Load trained pipeline ─────────────────────────────────────────────────
     pipeline = MarineImageBindPipeline().to(device)
-    ckpt = torch.load(CHECKPOINT_PATH, map_location=device, weights_only=False)
-    pipeline.load_state_dict(ckpt["model_state"], strict=False)
+    ckpt = torch.load(CHECKPOINT_PATH_OPEN, map_location=device, weights_only=False)
+    pipeline.load_state_dict(ckpt["model_state"])
     pipeline.eval()
     print(f"\n[Checkpoint] Epoch {ckpt['epoch']}, "
           f"Val composite = {ckpt['composite_score']:.4f}")
 
-    # ── Resolve test splits (dataset.py decides source + fallback) ────────────
+    # ΓöÇΓöÇ Resolve test splits (dataset.py decides source + fallback) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     print("\nResolving test splits from dataset.py ...")
 
     img_samples, img_meta = get_test_image_split()
@@ -317,11 +267,10 @@ def main(args):
     )
     sp2id = {sp: i for i, sp in enumerate(all_species)}
 
-    # ── Load frozen encoders ──────────────────────────────────────────────────
+    # ΓöÇΓöÇ Load frozen encoders ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     print("\nLoading frozen encoders ...")
-    print("  [Image] Transform only (ConvNeXt is now in the pipeline)")
-    img_tfm = _get_image_transform()
-    img_enc = _load_image_encoder(device)
+    print("  [Image] ConvNeXtV2 backbone ...")
+    img_bb, img_tfm = _load_image_encoder(device)
 
     print("  [Text]  SentenceTransformer ...")
     txt_enc = _load_text_encoder(device)
@@ -329,7 +278,7 @@ def main(args):
     print("  [Audio] AST model ...")
     aud_enc, aud_fe, aud_hook = _load_audio_encoder(device)
 
-    # ── 1. Build TEXT gallery ─────────────────────────────────────────────────
+    # ΓöÇΓöÇ 1. Build TEXT gallery ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     print("\nEncoding test TEXT gallery ...")
     txt_emb_list, txt_lbl_list = [], []
 
@@ -348,7 +297,7 @@ def main(args):
     txt_labels = torch.tensor(txt_lbl_list)   if txt_lbl_list else torch.zeros(0, dtype=torch.long)
     print(f"  Text gallery: {txt_embs.size(0)} species")
 
-    # ── 2. Build AUDIO gallery ────────────────────────────────────────────────
+    # ΓöÇΓöÇ 2. Build AUDIO gallery ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     print("\nEncoding test AUDIO gallery ...")
     aud_emb_list, aud_lbl_list = [], []
 
@@ -367,7 +316,7 @@ def main(args):
     aud_labels = torch.tensor(aud_lbl_list)  if aud_lbl_list else torch.zeros(0, dtype=torch.long)
     print(f"  Audio gallery: {aud_embs.size(0)} species")
 
-    # ── 3. Build IMAGE queries ────────────────────────────────────────────────
+    # ΓöÇΓöÇ 3. Build IMAGE queries ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     print("\nEncoding test IMAGE queries ...")
     img_emb_list, img_lbl_list, img_sp_list = [], [], []
 
@@ -375,7 +324,9 @@ def main(args):
         if sp not in sp2id:
             continue
         try:
-            proj = _encode_image(pipeline, img_enc, img_tfm, img_path, device)
+            raw  = _encode_image(img_bb, img_tfm, img_path, device)
+            with torch.no_grad():
+                proj = pipeline.image_head(raw.unsqueeze(0).to(device)).squeeze(0).cpu()
             img_emb_list.append(proj)
             img_lbl_list.append(sp2id[sp])
             img_sp_list.append(sp)
@@ -387,7 +338,7 @@ def main(args):
     print(f"  Image queries: {img_embs.size(0)} images, "
           f"{len(set(img_lbl_list))} species")
 
-    # ── 4. Compute Recall ─────────────────────────────────────────────────────
+    # ΓöÇΓöÇ 4. Compute Recall ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     print("\nComputing Recall@K ...")
     txt_recall = _compute_recall(img_embs, img_labels, txt_embs, txt_labels, KS)
     
@@ -412,7 +363,7 @@ def main(args):
     aud_comp = _composite(aud_recall)
     overall  = (txt_comp + aud_comp) / 2
 
-    # ── 5. Per-species breakdown ──────────────────────────────────────────────
+    # ΓöÇΓöÇ 5. Per-species breakdown ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     sp_breakdown = {}
     for sp in all_species:
         sp_id    = sp2id.get(sp, -1)
@@ -432,7 +383,7 @@ def main(args):
             "audio_src": aud_meta["source_per_species"].get(sp, "missing"),
         }
 
-    # ── 6. Print results ──────────────────────────────────────────────────────
+    # ΓöÇΓöÇ 6. Print results ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     print()
     print("=" * 64)
     print("  EVALUATION RESULTS  (test / held-out data)")
@@ -464,7 +415,7 @@ def main(args):
                 f"{info['audio_src']}"
             )
 
-    # ── 7. Save JSON report ───────────────────────────────────────────────────
+    # ΓöÇΓöÇ 7. Save JSON report ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
     report = {
         "checkpoint_epoch":        ckpt["epoch"],
         "val_composite_score":     round(ckpt["composite_score"], 4),

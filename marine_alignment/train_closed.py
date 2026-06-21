@@ -26,12 +26,12 @@ from torch.utils.data import DataLoader
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import (
-    DEVICE, WEIGHT_DECAY, MIN_VALID_SAMPLES, CHECKPOINT_PATH,
+    DEVICE, WEIGHT_DECAY, MIN_VALID_SAMPLES, CHECKPOINT_PATH_CLOSED,
     RECALL_WEIGHT_R1, RECALL_WEIGHT_R5, RECALL_WEIGHT_R10,
     HARD_NEG_COUNT
 )
 from dataset import MarineFeatureDataset, SpeciesBalancedSampler, make_splits
-from models  import MarineImageBindPipeline
+from models_closed  import MarineImageBindPipeline
 from loss    import supervised_contrastive_loss, check_loss_finite
 
 # == Training hyperparameters ===================================================
@@ -262,7 +262,7 @@ def composite_score(metrics):
     return sum(scores) / len(scores)
 
 
-def save_checkpoint(pipeline, epoch, score, metrics, path=CHECKPOINT_PATH):
+def save_checkpoint(pipeline, epoch, score, metrics, path=CHECKPOINT_PATH_CLOSED):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     torch.save({
         "epoch":           epoch,
@@ -353,7 +353,7 @@ def main(args):
 
     print(f"\n{'='*64}")
     print(f"  Training complete.  Best composite: {best_score:.4f}")
-    print(f"  Checkpoint    = {CHECKPOINT_PATH}")
+    print(f"  Checkpoint    = {CHECKPOINT_PATH_CLOSED}")
     print(f"{'='*64}")
 
 

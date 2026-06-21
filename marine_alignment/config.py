@@ -18,7 +18,9 @@ EMBEDDING_DIR = os.path.join(BASE_DIR, "extracted_features")
 
 # Where train.py saves trained_projection_heads
 CHECKPOINT_DIR  = os.path.join(BASE_DIR, "trained_projection_heads")
-CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "best_multimodal_pipeline.pth")
+CHECKPOINT_PATH_OPEN   = os.path.join(CHECKPOINT_DIR, "best_multimodal_pipeline_open.pth")
+CHECKPOINT_PATH_CLOSED = os.path.join(CHECKPOINT_DIR, "best_multimodal_pipeline_closed.pth")
+CHECKPOINT_PATH        = CHECKPOINT_PATH_CLOSED
 
 # ── Upstream Dataset Paths (used by feature_extractor.py) ─────────────────────
 IMAGE_DATASET_ROOT = os.path.join(PROJECT_ROOT, "datasets", "image_dataset", "train")

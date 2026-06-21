@@ -1,0 +1,1033 @@
+{
+  "checkpoint_epoch": 87,
+  "val_composite_score": 0.4883,
+  "data_sources": {
+    "image": {
+      "source": "test",
+      "n_species": 71,
+      "n_images": 391
+    },
+    "text": {
+      "source": "test",
+      "n_species": 75,
+      "n_docs": 370
+    },
+    "audio": {
+      "n_val": 32,
+      "n_train_fallback": 0,
+      "n_missing": 0
+    }
+  },
+  "test_img2txt": {
+    "R@1": 0.7161,
+    "R@5": 0.8338,
+    "R@10": 0.8926
+  },
+  "test_img2aud": {
+    "R@1": 0.6736,
+    "R@5": 0.7778,
+    "R@10": 0.8403
+  },
+  "test_img2aud_n_queries": 144,
+  "test_img2aud_n_species": 32,
+  "test_img2aud_note": "Recall computed only over images whose species has audio in gallery",
+  "test_img2txt_composite": 0.7691,
+  "test_img2aud_composite": 0.7215,
+  "overall_composite": 0.7453,
+  "per_species": {
+    "amazon_river_dolphin": {
+      "n_images": 7,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "amazonian_manatee": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "atlantic_spotted_dolphin": {
+      "n_images": 8,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "australian_sea_lion": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "baikal_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "bearded_seal": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.75,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "beluga_whale": {
+      "n_images": 2,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "bolivian_river_dolphin": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 0.8,
+        "R@5": 0.8,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "bottlenose_dolphin": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.5,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.75,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "bowhead_whale": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 0.6,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.8,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "burrunan_dolphin": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.6667,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "california_sea_lion": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.6667,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "caspian_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "clymene_dolphin": {
+      "n_images": 7,
+      "img2txt": {
+        "R@1": 0.8571,
+        "R@5": 0.8571,
+        "R@10": 0.8571
+      },
+      "img2aud": {
+        "R@1": 0.8571,
+        "R@5": 0.8571,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "common_dolphin": {
+      "n_images": 10,
+      "img2txt": {
+        "R@1": 0.9,
+        "R@5": 0.9,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.9,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "dalls_porpoise": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "dugong": {
+      "n_images": 2,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.5,
+        "R@10": 0.5
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "dusky_dolphin": {
+      "n_images": 7,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "dwarf_sperm_whale": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.6667,
+        "R@5": 0.8333,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "false_killer_whale": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "fin_whale": {
+      "n_images": 7,
+      "img2txt": {
+        "R@1": 0.8571,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "frasers_dolphin": {
+      "n_images": 3,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "gray_whale": {
+      "n_images": 8,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "grey_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.6667,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "guiana_dolphin": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 0.6,
+        "R@5": 0.8,
+        "R@10": 0.8
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "harbour_porpoise": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "harp_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "hectors_dolphin": {
+      "n_images": 10,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "hooded_seal": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 0.6,
+        "R@5": 0.8,
+        "R@10": 0.8
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "humpback_whale": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.6667,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "indo_pacific_bottlenose_dolphin": {
+      "n_images": 7,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.4286
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "indo_pacific_finless_porpoise": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.4,
+        "R@10": 0.8
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "indo_pacific_humpbacked_dolphin": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.6667,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "irrawaddy_dolphin": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 0.8333,
+        "R@10": 0.8333
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "killer_whale": {
+      "n_images": 2,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "val"
+    },
+    "la_plata_dolphin": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "leopard_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "long_finned_pilot_whale": {
+      "n_images": 3,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.3333,
+        "R@10": 0.3333
+      },
+      "audio_src": "val"
+    },
+    "mediterranean_monk_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 0.8333,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "melon_headed_whale": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.75
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.5
+      },
+      "audio_src": "val"
+    },
+    "minke_whale": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "narwhal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "new_zealand_sea_lion": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.6667,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "north_atlantic_right_whale": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.25,
+        "R@5": 0.75,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "northern_elephant_seal": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "orca": {
+      "n_images": 11,
+      "img2txt": {
+        "R@1": 0.9091,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "pantropical_spotted_dolphin": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.75,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.5,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "polar_bear": {
+      "n_images": 2,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "right_whale": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "ringed_seal": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 0.6,
+        "R@5": 0.8,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "risso_s_dolphin": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "ross_seal": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.5,
+        "R@5": 0.5,
+        "R@10": 0.5
+      },
+      "img2aud": {
+        "R@1": 0.5,
+        "R@5": 0.75,
+        "R@10": 0.75
+      },
+      "audio_src": "val"
+    },
+    "rough_toothed_dolphin": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "val"
+    },
+    "sea_otter": {
+      "n_images": 1,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "short_finned_pilot_whale": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.5
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "south_american_sea_lion": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "south_asian_river_dolphin": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "southern_elephant_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.6667,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "southern_right_whale": {
+      "n_images": 4,
+      "img2txt": {
+        "R@1": 0.75,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.75,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "sperm_whale": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "spinner_dolphin": {
+      "n_images": 7,
+      "img2txt": {
+        "R@1": 0.8571,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.8571,
+        "R@5": 0.8571,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "spotted_seal": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "steller_sea_lion": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "striped_dolphin": {
+      "n_images": 10,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "audio_src": "val"
+    },
+    "vaquita": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.8333,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "walrus": {
+      "n_images": 2,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.5,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.5
+      },
+      "audio_src": "val"
+    },
+    "weddell_seal": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.1667
+      },
+      "audio_src": "val"
+    },
+    "west_african_manatee": {
+      "n_images": 5,
+      "img2txt": {
+        "R@1": 1.0,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "west_indian_manatee": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.6667,
+        "R@5": 1.0,
+        "R@10": 1.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "audio_src": "missing"
+    },
+    "white_beaked_dolphin": {
+      "n_images": 6,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.1667
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.3333
+      },
+      "audio_src": "val"
+    },
+    "white_sided_dolphin": {
+      "n_images": 7,
+      "img2txt": {
+        "R@1": 0.0,
+        "R@5": 0.0,
+        "R@10": 0.0
+      },
+      "img2aud": {
+        "R@1": 0.0,
+        "R@5": 0.5714,
+        "R@10": 0.7143
+      },
+      "audio_src": "val"
+    }
+  }
+}

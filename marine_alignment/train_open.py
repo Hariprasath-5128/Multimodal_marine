@@ -1,4 +1,4 @@
-﻿"""
+"""
 train.py ΓÇö Two-Phase Training for Marine Multimodal Alignment
 =============================================================
 Phase 1 (PHASE1_EPOCHS epochs):
@@ -41,12 +41,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import (
     DEVICE, LEARNING_RATE, WEIGHT_DECAY, TEMPERATURE, EPOCHS,
-    BATCH_SIZE, MIN_VALID_SAMPLES, CHECKPOINT_PATH,
+    BATCH_SIZE, MIN_VALID_SAMPLES, CHECKPOINT_PATH_OPEN,
     RECALL_WEIGHT_R1, RECALL_WEIGHT_R5, RECALL_WEIGHT_R10,
     HARD_NEG_COUNT
 )
 from dataset import MarineFeatureDataset, SpeciesBalancedSampler, make_splits
-from models  import MarineImageBindPipeline
+from models_open  import MarineImageBindPipeline
 from loss    import supervised_contrastive_loss, check_loss_finite
 
 # == Phase configuration ======================================================
@@ -280,7 +280,7 @@ def composite_score(metrics):
     return sum(scores) / len(scores)
 
 
-def save_checkpoint(pipeline, epoch, score, metrics, path=CHECKPOINT_PATH):
+def save_checkpoint(pipeline, epoch, score, metrics, path=CHECKPOINT_PATH_OPEN):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     torch.save({
         "epoch":           epoch,
@@ -345,7 +345,7 @@ def main(args):
     pipeline = MarineImageBindPipeline().to(device)
     
     # Load backup checkpoint if we are resuming Phase 2
-    ckpt_path = os.path.join(os.path.dirname(CHECKPOINT_PATH), "best_multimodal_pipeline_backup.pth")
+    ckpt_path = CHECKPOINT_PATH_OPEN
     if os.path.exists(ckpt_path):
         print(f"Loading checkpoint from {ckpt_path} to resume training...")
         ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
@@ -449,7 +449,7 @@ def main(args):
     print(f"  Training complete.  Best composite: {best_score:.4f}")
     print(f"  Final I->T R@1 = {vr.get('img2txt_R@1', 0):.3f}")
     print(f"  Final I->A R@1 = {vr.get('img2aud_R@1', 0):.3f}")
-    print(f"  Checkpoint    = {CHECKPOINT_PATH}")
+    print(f"  Checkpoint    = {CHECKPOINT_PATH_OPEN}")
     print(f"{'='*64}")
 
 
