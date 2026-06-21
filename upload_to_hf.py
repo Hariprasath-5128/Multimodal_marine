@@ -13,11 +13,8 @@ except Exception as e:
     print("Could not load valid token from .env:", e)
 
 if not token or "Invalid" in str(e) if 'e' in locals() else False:
-    print("\n[WARNING] It looks like your Hugging Face token is invalid.")
-    print("GitHub likely revoked it automatically for your safety when we accidentally tried to commit it earlier!")
-    print("Please go to https://huggingface.co/settings/tokens, create a new WRITE token, and paste it below.")
-    token = input("Enter new HF Token: ").strip()
-    login(token)
+    print("\n[WARNING] It looks like the explicit token in env/.env is missing or invalid.")
+    print("Relying on system cached token (e.g. from `huggingface-cli login`).")
 
 api = HfApi()
 
@@ -48,6 +45,12 @@ def zip_and_upload(folder_path, repo_dir):
     zip_name = folder_name + ".zip"
     remote_path = f"{repo_dir}/{zip_name}"
     
+    print(f"Ensuring uncompressed folder {repo_dir}/{folder_name} is removed from HF...")
+    try:
+        api.delete_folder(path_in_repo=f"{repo_dir}/{folder_name}", repo_id=REPO_ID, repo_type=REPO_TYPE)
+    except Exception:
+        pass
+        
     print(f"Uploading {zip_name} to {remote_path}...")
     api.upload_file(
         path_or_fileobj=zip_path,
@@ -93,7 +96,7 @@ api.upload_folder(
     folder_path=LOCAL_DIR,
     repo_id=REPO_ID,
     repo_type=REPO_TYPE,
-    ignore_patterns=[".git", ".git/**", "__pycache__", "*.log", "env/**", "datasets/**", "marine_alignment/extracted_features/**", "*.pth", "*.pt", "*.bin", "*.safetensors"], 
+    ignore_patterns=[".git", ".git/**", "__pycache__", "*.log", "env/**", "datasets/**", "marine_alignment/extracted_features/**", "marine_alignment/trained_projection_heads/**", "training/audio_classification/marine_audio_classification_model/**", "training/image_classification/models/**", "*.pth", "*.pt", "*.bin", "*.safetensors"], 
 )
 
 print(f"\nAll Uploads Complete! View your project here: https://huggingface.co/{REPO_ID}")
