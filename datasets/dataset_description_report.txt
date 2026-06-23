@@ -1,0 +1,59 @@
+MARINE SPECIES MULTIMODAL DATASET - DESCRIPTION REPORT
+======================================================
+
+1. OVERVIEW
+-----------
+This dataset is a comprehensive multimodal collection designed for marine species recognition, classification, and analysis. It comprises three primary modalities: Audio, Image, and Text, each organized to facilitate machine learning and deep learning workflows.
+
+2. DATA ACCESS
+--------------
+The dataset is primarily located in the following directory:
+Path: C:\Projects\marine\datasets
+
+You can access the data by navigating to the respective subdirectories for each modality:
+- Audio Data: `datasets/audio_dataset/`
+- Image Data: `datasets/image_dataset/`
+- Text Data:  `datasets/text_dataset/`
+
+3. DATA MODALITIES AND FORMAT
+-----------------------------
+The dataset is split into training and testing subsets to evaluate model performance effectively.
+
+A. Audio Dataset (`audio_dataset`)
+   - Structure: Contains subdirectories for data splits (`train`, `test`).
+   - Format: Standard audio formats containing vocalizations and underwater acoustic signals of various marine species.
+
+B. Image Dataset (`image_dataset`)
+   - Structure: Contains `train` and `test` subdirectories with images categorized by species.
+   - Format: Standard image formats (e.g., JPEG/PNG). 
+
+C. Text Dataset (`text_dataset`)
+   - Structure: Contains `train` and `test` subdirectories. Includes augmented text descriptions, scientific facts, behavioral summaries, and Wikipedia excerpts for various marine animals.
+   - Format: Plain text files (`.txt`).
+   - Tools: Includes Python scripts (e.g., `marine_species_dataset_augmentor.py`) used for text data augmentation and formatting.
+
+4. IMPLEMENTATION GUIDE
+-----------------------
+To utilize this dataset in machine learning projects, follow these implementation steps based on the modality:
+
+A. Loading Image Data
+   - Frameworks like PyTorch and TensorFlow provide built-in utilities.
+   - PyTorch: Use `torchvision.datasets.ImageFolder('datasets/image_dataset/train', transform=...)` to automatically load and label images based on folder names.
+   - TensorFlow/Keras: Use `tf.keras.utils.image_dataset_from_directory('datasets/image_dataset/train')`.
+
+B. Loading Audio Data
+   - Use libraries such as `librosa` or `torchaudio` to load the audio files.
+   - Example (torchaudio): Load the waveform and apply transforms like `MelSpectrogram` or `MFCC` to extract acoustic features before feeding them into a Convolutional Neural Network (CNN) or Audio Spectrogram Transformer (AST).
+
+C. Loading Text Data
+   - Read the `.txt` files iteratively using standard Python File I/O.
+   - Preprocessing: Tokenize the text data using libraries like `nltk`, `spaCy`, or Hugging Face's `transformers` (e.g., BERT tokenizer).
+   - Models: Pass the tokenized text into NLP models (LSTMs, Transformers) for tasks like classification or cross-modal retrieval.
+
+D. Multimodal Fusion
+   - If utilizing multiple modalities simultaneously (e.g., Audio + Image), extract feature embeddings from individual unimodal networks.
+   - Combine these embeddings using techniques like concatenation (early/late fusion) or attention mechanisms to build a robust multimodal classifier.
+
+5. NOTES
+--------
+- Ensure that the class labels across different modalities align if you are performing multimodal training.
