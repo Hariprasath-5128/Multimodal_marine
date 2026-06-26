@@ -32,6 +32,9 @@ datasets/marine_mammal_test/
 !*.txt
 !*.csv
 
+#Organisation Report
+*.pdf
+
 # Secrets
 .env
 

@@ -1,7 +1,11 @@
 MARINE SPECIES MULTIMODAL DATASET - DESCRIPTION REPORT
 ======================================================
 
-1. OVERVIEW
+1. DESCRIPTION
+--------------
+This dataset is a comprehensive collection focused on marine species, encompassing diverse data types including audio recordings, high-quality images, and textual descriptions. It contains thousands of samples meticulously categorized into training and testing sets to facilitate robust analysis and model evaluation. The data covers a wide array of marine animals, featuring underwater acoustic vocalizations, visual captures, scientific facts, and behavioral summaries. Designed for advanced species recognition and ecological research, this rich collection provides a broad foundation for pattern classification tasks and machine learning applications across different domains of marine biology.
+
+2. OVERVIEW
 -----------
 This dataset is a comprehensive multimodal collection designed for marine species recognition, classification, and analysis. It comprises three primary modalities: Audio, Image, and Text, each organized to facilitate machine learning and deep learning workflows.
 
@@ -57,3 +61,11 @@ D. Multimodal Fusion
 5. NOTES
 --------
 - Ensure that the class labels across different modalities align if you are performing multimodal training.
+
+6. DATASET STATISTICS
+---------------------
+- **Overall Unique Species Target:** 75 distinct marine species.
+- **Matched Species:** 20 species have fully matched, overlapping data across both image and audio modalities.
+- **Image Dataset:** Organized into 10 broad categories (e.g., dolphin, whale, seal), with an average of ~23 images per unique species.
+- **Audio Dataset:** Contains an average of ~53 audio recordings/clips per unique species.
+- **Text Dataset:** Contains multiple augmented text variations (average of 10-15 descriptions) per species, detailing scientific facts and taxonomy for all 75 unique species.
