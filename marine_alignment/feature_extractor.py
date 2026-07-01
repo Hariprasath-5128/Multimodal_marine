@@ -376,23 +376,38 @@ def extract_species_audio_embeddings(
 
 def collect_image_samples(image_root: str) -> list[tuple[str, str, str]]:
     """
-    Walk image_dataset/train/<domain>/<species>/<image_files>
+    Walk image_dataset/train/<domain>/<species>/<image_files> OR
+    image_dataset/train/<domain>/<image_files> if the domain has no species subdirectories.
     and return list of (species_key, domain, abs_image_path).
     """
     samples = []
+    IMG_EXTENSIONS = ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.avif")
     for domain in sorted(os.listdir(image_root)):
         domain_dir = os.path.join(image_root, domain)
         if not os.path.isdir(domain_dir):
             continue
-        for species_folder in sorted(os.listdir(domain_dir)):
-            species_dir = os.path.join(domain_dir, species_folder)
-            if not os.path.isdir(species_dir):
-                continue
-            species_key = canonical_species(species_folder)
-            for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp"):
-                for img_path in sorted(glob.glob(os.path.join(species_dir, ext))):
+        # Check if this folder directly contains images (flat layout)
+        has_images = any(
+            glob.glob(os.path.join(domain_dir, ext))
+            for ext in IMG_EXTENSIONS
+        )
+        if has_images:
+            species_key = canonical_species(domain)
+            for ext in IMG_EXTENSIONS:
+                for img_path in sorted(glob.glob(os.path.join(domain_dir, ext))):
                     samples.append((species_key, domain, img_path))
+        else:
+            # Domain layout — drill one level deeper
+            for species_folder in sorted(os.listdir(domain_dir)):
+                species_dir = os.path.join(domain_dir, species_folder)
+                if not os.path.isdir(species_dir):
+                    continue
+                species_key = canonical_species(species_folder)
+                for ext in IMG_EXTENSIONS:
+                    for img_path in sorted(glob.glob(os.path.join(species_dir, ext))):
+                        samples.append((species_key, domain, img_path))
     return samples
+
 
 
 # ──────────────────────────────────────────────────────────────────────────────

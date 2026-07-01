@@ -87,7 +87,7 @@ def train_epoch_phase1(pipeline, dataloader, optimizer, device):
     for batch in dataloader:
         optimizer.zero_grad()
 
-        image_emb = batch["image_emb"].to(device)
+        image_emb = batch["image_tensor"].to(device)
         text_emb  = batch["text_emb"].to(device)
         has_text  = batch["has_text"].to(device)
         labels    = batch["species_id"].to(device)
@@ -106,7 +106,7 @@ def train_epoch_phase1(pipeline, dataloader, optimizer, device):
             valid_lbl = labels[has_text]
 
             l_txt = supervised_contrastive_loss(
-                valid_img, valid_txt, valid_lbl,
+                valid_img, valid_txt, valid_lbl, None,
                 TEMPERATURE_TXT, HARD_NEG_COUNT,
                 exclude_diagonal=False,
             )
@@ -202,7 +202,7 @@ def calculate_cross_modal_recall(pipeline, dataloader, device, ks=(1, 5, 10)):
     all_lbl_img, all_lbl_txt, all_lbl_aud = [], [], []
 
     for batch in dataloader:
-        img_emb   = batch["image_emb"].to(device)
+        img_emb   = batch["image_tensor"].to(device)
         txt_emb   = batch["text_emb"].to(device)
         aud_emb   = batch["audio_emb"].to(device)
         has_text  = batch["has_text"].to(device)
