@@ -231,7 +231,7 @@ def verify(embedding_dir: str, verbose: bool, fix_norms: bool) -> int:
 
     if errors == 0:
         print(f"\n{GREEN}{BOLD}✓ All features verified successfully.{RESET}")
-        print("  You can now run:  python train_open.py and python train_closed.py")
+        print("  You can now run:  python train.py")
     else:
         print(f"\n{RED}{BOLD}✗ {errors} error(s) found. Fix before training.{RESET}")
 

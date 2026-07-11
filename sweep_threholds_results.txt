@@ -1,0 +1,102 @@
+Audio Open
+
+========================================================================
+  OPTIMIZATION SWEEP RESULTS (AUDIO MODALITY)
+========================================================================
+  Best F1-Score for OOD audio detection: 0.7907
+  Optimal Cosine Similarity Threshold : 0.59
+  Optimal Confidence Margin Threshold  : 0.01
+------------------------------------------------------------------------
+  Detailed Statistics for Optimal Thresholds:
+    - True Positives (OOD correctly rejected)    : 136/186 (73.1%)
+    - False Positives (Known incorrectly rejected): 22/100
+    - True Negatives (Known correctly accepted)  : 78/100
+    - False Negatives (OOD incorrectly accepted) : 50/186
+    - OOD Detection Precision                     : 86.1%
+    - OOD Detection Recall (Sensitivity)         : 73.1%
+========================================================================
+
+Audio closed
+========================================================================
+  OPTIMIZATION SWEEP RESULTS (AUDIO MODALITY)
+========================================================================
+  Best F1-Score for OOD audio detection: 0.7901
+  Optimal Cosine Similarity Threshold : 0.59
+  Optimal Confidence Margin Threshold  : 0.01
+------------------------------------------------------------------------
+  Detailed Statistics for Optimal Thresholds:
+    - True Positives (OOD correctly rejected)    : 128/186 (68.8%)
+    - False Positives (Known incorrectly rejected): 10/100
+    - True Negatives (Known correctly accepted)  : 90/100
+    - False Negatives (OOD incorrectly accepted) : 58/186
+    - OOD Detection Precision                     : 92.8%
+    - OOD Detection Recall (Sensitivity)         : 68.8%
+========================================================================
+
+Test open
+========================================================================
+  OPTIMIZATION SWEEP RESULTS (TEXT MODALITY)
+========================================================================
+  Best F1-Score for OOD text detection: 0.8761
+  Optimal Cosine Similarity Threshold : 0.37
+  Optimal Confidence Margin Threshold  : 0.02
+------------------------------------------------------------------------
+  Detailed Statistics for Optimal Thresholds:
+    - True Positives (OOD correctly rejected)    : 99/110 (90.0%)
+    - False Positives (Known incorrectly rejected): 17/100
+    - True Negatives (Known correctly accepted)  : 83/100
+    - False Negatives (OOD incorrectly accepted) : 11/110
+    - OOD Detection Precision                     : 85.3%
+    - OOD Detection Recall (Sensitivity)         : 90.0%
+========================================================================
+
+Test closed
+========================================================================
+  OPTIMIZATION SWEEP RESULTS (TEXT MODALITY)
+========================================================================
+  Best F1-Score for OOD text detection: 0.8493
+  Optimal Cosine Similarity Threshold : 0.46
+  Optimal Confidence Margin Threshold  : 0.02
+------------------------------------------------------------------------
+  Detailed Statistics for Optimal Thresholds:
+    - True Positives (OOD correctly rejected)    : 93/110 (84.5%)
+    - False Positives (Known incorrectly rejected): 16/100
+    - True Negatives (Known correctly accepted)  : 84/100
+    - False Negatives (OOD incorrectly accepted) : 17/110
+    - OOD Detection Precision                     : 85.3%
+    - OOD Detection Recall (Sensitivity)         : 84.5%
+========================================================================
+
+Image open
+========================================================================
+  OPTIMIZATION SWEEP RESULTS
+========================================================================
+  Best F1-Score for OOD detection: 0.9812
+  Optimal Cosine Similarity Threshold : 0.36
+  Optimal Confidence Margin Threshold  : 0.02
+------------------------------------------------------------------------
+  Detailed Statistics for Optimal Thresholds:
+    - True Positives (OOD correctly rejected)    : 314/320 (98.1%)
+    - False Positives (Known incorrectly rejected): 6/100
+    - True Negatives (Known correctly accepted)  : 94/100
+    - False Negatives (OOD incorrectly accepted) : 6/320
+    - OOD Detection Precision                     : 98.1%
+    - OOD Detection Recall (Sensitivity)         : 98.1%
+========================================================================
+
+Iamge closed
+========================================================================
+  OPTIMIZATION SWEEP RESULTS
+========================================================================
+  Best F1-Score for OOD detection: 0.9674
+  Optimal Cosine Similarity Threshold : 0.56
+  Optimal Confidence Margin Threshold  : 0.02
+------------------------------------------------------------------------
+  Detailed Statistics for Optimal Thresholds:
+    - True Positives (OOD correctly rejected)    : 312/320 (97.5%)
+    - False Positives (Known incorrectly rejected): 13/100
+    - True Negatives (Known correctly accepted)  : 87/100
+    - False Negatives (OOD incorrectly accepted) : 8/320
+    - OOD Detection Precision                     : 96.0%
+    - OOD Detection Recall (Sensitivity)         : 97.5%
+========================================================================

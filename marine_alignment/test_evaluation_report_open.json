@@ -1,6 +1,6 @@
 {
-  "checkpoint_epoch": 1,
-  "val_composite_score": 0.8497,
+  "checkpoint_epoch": 31,
+  "val_composite_score": 0.8491,
   "data_sources": {
     "image": {
       "source": "test",
@@ -19,21 +19,21 @@
     }
   },
   "test_img2txt": {
-    "R@1": 0.7647,
-    "R@5": 0.8517,
-    "R@10": 0.913
+    "R@1": 0.7596,
+    "R@5": 0.8593,
+    "R@10": 0.9079
   },
   "test_img2aud": {
-    "R@1": 0.6944,
+    "R@1": 0.6875,
     "R@5": 0.7847,
-    "R@10": 0.8542
+    "R@10": 0.8472
   },
   "test_img2aud_n_queries": 144,
   "test_img2aud_n_species": 32,
   "test_img2aud_note": "Recall computed only over images whose species has audio in gallery",
-  "test_img2txt_composite": 0.8056,
-  "test_img2aud_composite": 0.7375,
-  "overall_composite": 0.7716,
+  "test_img2txt_composite": 0.8043,
+  "test_img2aud_composite": 0.7326,
+  "overall_composite": 0.7685,
   "per_species": {
     "amazon_river_dolphin": {
       "n_images": 7,
@@ -150,7 +150,7 @@
     "bottlenose_dolphin": {
       "n_images": 4,
       "img2txt": {
-        "R@1": 0.75,
+        "R@1": 0.5,
         "R@5": 1.0,
         "R@10": 1.0
       },
@@ -166,7 +166,7 @@
       "img2txt": {
         "R@1": 0.6,
         "R@5": 0.8,
-        "R@10": 0.8
+        "R@10": 1.0
       },
       "img2aud": {
         "R@1": 0.6,
@@ -225,9 +225,9 @@
         "R@10": 1.0
       },
       "img2aud": {
-        "R@1": 0.8571,
+        "R@1": 0.7143,
         "R@5": 0.8571,
-        "R@10": 0.8571
+        "R@10": 1.0
       },
       "audio_src": "val"
     },
@@ -235,7 +235,7 @@
       "n_images": 10,
       "img2txt": {
         "R@1": 0.9,
-        "R@5": 0.9,
+        "R@5": 1.0,
         "R@10": 1.0
       },
       "img2aud": {
@@ -374,7 +374,7 @@
     "guiana_dolphin": {
       "n_images": 5,
       "img2txt": {
-        "R@1": 0.8,
+        "R@1": 0.6,
         "R@5": 0.8,
         "R@10": 0.8
       },
@@ -407,7 +407,7 @@
         "R@10": 1.0
       },
       "img2aud": {
-        "R@1": 1.0,
+        "R@1": 0.8333,
         "R@5": 1.0,
         "R@10": 1.0
       },
@@ -449,7 +449,7 @@
         "R@10": 1.0
       },
       "img2aud": {
-        "R@1": 0.6667,
+        "R@1": 0.8333,
         "R@5": 1.0,
         "R@10": 1.0
       },
@@ -459,7 +459,7 @@
       "n_images": 7,
       "img2txt": {
         "R@1": 0.0,
-        "R@5": 0.2857,
+        "R@5": 0.4286,
         "R@10": 0.5714
       },
       "img2aud": {
@@ -521,7 +521,7 @@
       "img2aud": {
         "R@1": 0.0,
         "R@5": 0.0,
-        "R@10": 0.0
+        "R@10": 0.5
       },
       "audio_src": "val"
     },
@@ -558,12 +558,12 @@
       "img2txt": {
         "R@1": 0.0,
         "R@5": 0.0,
-        "R@10": 1.0
+        "R@10": 0.6667
       },
       "img2aud": {
         "R@1": 0.0,
         "R@5": 0.3333,
-        "R@10": 1.0
+        "R@10": 0.6667
       },
       "audio_src": "val"
     },
@@ -585,8 +585,8 @@
       "n_images": 4,
       "img2txt": {
         "R@1": 0.0,
-        "R@5": 0.25,
-        "R@10": 0.75
+        "R@5": 0.0,
+        "R@10": 0.25
       },
       "img2aud": {
         "R@1": 0.0,
@@ -772,8 +772,8 @@
       },
       "img2aud": {
         "R@1": 0.0,
-        "R@5": 0.25,
-        "R@10": 0.5
+        "R@5": 0.0,
+        "R@10": 0.0
       },
       "audio_src": "val"
     },
@@ -795,7 +795,7 @@
       "n_images": 4,
       "img2txt": {
         "R@1": 0.0,
-        "R@5": 0.0,
+        "R@5": 0.25,
         "R@10": 0.75
       },
       "img2aud": {
@@ -856,7 +856,7 @@
       },
       "img2aud": {
         "R@1": 0.75,
-        "R@5": 0.75,
+        "R@5": 1.0,
         "R@10": 1.0
       },
       "audio_src": "val"
@@ -1010,7 +1010,7 @@
       },
       "img2aud": {
         "R@1": 0.0,
-        "R@5": 0.1667,
+        "R@5": 0.0,
         "R@10": 0.1667
       },
       "audio_src": "val"
@@ -1019,12 +1019,12 @@
       "n_images": 7,
       "img2txt": {
         "R@1": 0.0,
-        "R@5": 0.0,
+        "R@5": 0.1429,
         "R@10": 0.1429
       },
       "img2aud": {
         "R@1": 0.0,
-        "R@5": 0.1429,
+        "R@5": 0.2857,
         "R@10": 0.5714
       },
       "audio_src": "val"

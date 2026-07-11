@@ -7,9 +7,8 @@ from transformers import AutoTokenizer
 from sentence_transformers import SentenceTransformer, util
 
 # Configuration
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-INPUT_DIR = os.path.join(BASE_DIR, "train_dataset")
-OUTPUT_DIR = os.path.join(BASE_DIR, "expanded_train_dataset")
+INPUT_DIR = r"C:\Projects\marine\datasets\text_dataset\train_dataset"
+OUTPUT_DIR = r"C:\Projects\marine\datasets\text_dataset\expanded_train_dataset"
 QA_REPORT_PATH = os.path.join(OUTPUT_DIR, "_Dataset_QA_Report.txt")
 
 MODEL = "llama3:8b"

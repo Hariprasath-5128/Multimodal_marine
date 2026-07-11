@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marine Multimodal Zero-Shot Discovery & Retrieval Dashboard</title>
+    <meta name="description" content="Cross-modal retrieval and zero-shot discovery interface for marine species.">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #060b13;
+            --panel-bg: rgba(13, 23, 38, 0.65);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-glow: rgba(0, 229, 255, 0.15);
+            --neon-blue: #00e5ff;
+            --neon-teal: #00ff88;
+            --neon-red: #ff1744;
+            --neon-orange: #ff9100;
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.04) 0%, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        header {
+            padding: 2rem 4%;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(6, 11, 19, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 229, 255, 0.3));
+        }
+
+        .header-logo h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-status {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .header-status .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--neon-teal);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-teal);
+        }
+
+        main {
+            flex: 1;
+            padding: 2.5rem 4%;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: var(--transition-smooth);
+        }
+
+        .card:hover {
+            border-color: rgba(0, 229, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 229, 255, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffffff;
+        }
+
+        .section-title i {
+            color: var(--neon-blue);
+        }
+
+        /* Config / Form styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .toggle-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 4px;
+            border-radius: 12px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, var(--neon-blue), rgba(0, 229, 255, 0.2));
+            color: #ffffff;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.15);
+        }
+
+        /* Tab Layout */
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 6px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn i {
+            font-size: 1.1rem;
+        }
+
+        .tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tab-btn.active {
+            color: var(--neon-blue);
+            background: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.15);
+        }
+
+        /* File Upload styling */
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            background: rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 229, 255, 0.02);
+        }
+
+        .upload-icon {
+            font-size: 2.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .upload-area:hover .upload-icon {
+            color: var(--neon-blue);
+            transform: translateY(-4px);
+        }
+
+        .upload-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .upload-subtext {
+            font-size: 0.75rem;
+            color: rgba(148, 163, 184, 0.6);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Preview elements */
+        .preview-container {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--bg-color);
+            z-index: 10;
+            padding: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-preview {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .audio-preview-ui {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .audio-preview-ui i {
+            font-size: 3rem;
+            color: var(--neon-teal);
+            filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.2));
+        }
+
+        .remove-file-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 23, 68, 0.8);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .remove-file-btn:hover {
+            background: var(--neon-red);
+            transform: scale(1.1);
+        }
+
+        /* Text Input elements */
+        .textarea-input {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-primary);
+            padding: 1rem;
+            font-size: 0.95rem;
+            resize: vertical;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .textarea-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+        }
+
+        /* Name Select elements */
+        .select-input-container {
+            position: relative;
+        }
+
+        .select-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-primary);
+            padding: 12px 1rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .select-input-container::after {
+            content: "\f0d7";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        /* Sliders */
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+        }
+
+        .slider-input {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            outline: none;
+        }
+
+        .slider-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--neon-blue);
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--neon-blue);
+            transition: var(--transition-smooth);
+        }
+
+        .slider-input::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Query Button */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-teal));
+            border: none;
+            border-radius: 16px;
+            color: #02060d;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 24px rgba(0, 229, 255, 0.25);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 229, 255, 0.4);
+            filter: brightness(1.05);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+            cursor: not-allowed;
+            filter: none;
+        }
+
+        /* Right panel: Results UI */
+        .result-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 400px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .result-empty i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .result-container {
+            display: none;
+            flex-direction: column;
+            gap: 2rem;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Decision Banner */
+        .decision-banner {
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .decision-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .decision-banner i {
+            font-size: 2.2rem;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .decision-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .decision-sub {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Green / Accept theme */
+        .decision-banner.accept {
+            background: rgba(0, 255, 136, 0.06);
+            border-color: rgba(0, 255, 136, 0.2);
+            color: var(--neon-teal);
+        }
+        .decision-banner.accept::before {
+            background-color: var(--neon-teal);
+        }
+
+        /* Red / Reject theme */
+        .decision-banner.reject {
+            background: rgba(255, 23, 68, 0.06);
+            border-color: rgba(255, 23, 68, 0.2);
+            color: var(--neon-red);
+        }
+        .decision-banner.reject::before {
+            background-color: var(--neon-red);
+        }
+
+        /* Metric Dashboard layout */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .metric-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem 1rem;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .metric-status {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .metric-status.pass {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--neon-teal);
+        }
+
+        .metric-status.fail {
+            background: rgba(255, 23, 68, 0.1);
+            color: var(--neon-red);
+        }
+
+        /* Species retrieval results list */
+        .matches-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .match-row {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition-smooth);
+        }
+
+        .match-row:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateX(4px);
+        }
+
+        .match-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .match-rank {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .match-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .match-score-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .match-score {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--neon-blue);
+        }
+
+        .match-bar-bg {
+            width: 80px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .match-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-teal));
+            border-radius: 3px;
+        }
+
+        /* Loading Spinner */
+        .spinner-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 11, 19, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1.5rem;
+            border-radius: 24px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(0, 229, 255, 0.1);
+            border-top-color: var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--neon-blue);
+            letter-spacing: 0.5px;
+        }
+
+        footer {
+            padding: 2rem 4%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(148, 163, 184, 0.4);
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+            background: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo">
+            <i class="fa-solid fa-water"></i>
+            <div>
+                <h1>Marine Multimodal Species Alignment</h1>
+            </div>
+        </div>
+        <div class="header-status">
+            <div class="dot"></div>
+            <span>Shared Latent Space Active (768-D)</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Left Panel: Input Form -->
+        <section class="card" style="position: relative;">
+            <!-- Loading overlay -->
+            <div class="spinner-container" id="loadingSpinner">
+                <div class="spinner"></div>
+                <div class="spinner-text" id="spinnerText">Processing multi-modal query...</div>
+            </div>
+
+            <h2 class="section-title">
+                <i class="fa-solid fa-sliders"></i>
+                Query Parameters & Input
+            </h2>
+
+            <form id="queryForm" onsubmit="submitQuery(event)">
+                <!-- Model architecture selection -->
+                <div class="form-group">
+                    <label class="form-label">Projection Head Architecture</label>
+                    <div class="toggle-container">
+                        <button type="button" class="toggle-btn active" id="modelClosed" onclick="setModel('closed')">CLOSED (Joint Model)</button>
+                        <button type="button" class="toggle-btn" id="modelOpen" onclick="setModel('open')">OPEN (Two-Phase Model)</button>
+                    </div>
+                </div>
+
+                <!-- Modality Selector Tabs -->
+                <div class="form-group">
+                    <label class="form-label">Query Modality</label>
+                    <div class="tabs">
+                        <button type="button" class="tab-btn active" id="tabImage" onclick="setModality('image')">
+                            <i class="fa-regular fa-image"></i>
+                            <span>Image</span>
+                        </button>
+                        <button type="button" class="tab-btn" id="tabText" onclick="setModality('text')">
+                            <i class="fa-solid fa-paragraph"></i>
+                            <span>Text</span>
+                        </button>
+                        <button type="button" class="tab-btn" id="tabAudio" onclick="setModality('audio')">
+                            <i class="fa-solid fa-volume-high"></i>
+                            <span>Audio</span>
+                        </button>
+                        <button type="button" class="tab-btn" id="tabName" onclick="setModality('name')">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Species</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dynamic Modality Inputs -->
+                <div class="form-group" id="inputContainer">
+                    <!-- Image Input Block -->
+                    <div id="modalityInput_image" class="modality-input-block">
+                        <label class="form-label">Upload Image Query</label>
+                        <div class="upload-area" id="imageDropzone" onclick="document.getElementById('imageFileInput').click()">
+                            <i class="fa-regular fa-image upload-icon"></i>
+                            <p class="upload-text">Drag & drop your marine animal photo here</p>
+                            <p class="upload-subtext">Supports PNG, JPG, JPEG, WEBP (Auto-cropped to 224x224)</p>
+                            <input type="file" id="imageFileInput" class="file-input" accept="image/*" onchange="previewImage(this)">
+                            
+                            <div class="preview-container" id="imagePreviewContainer">
+                                <button type="button" class="remove-file-btn" onclick="clearFile('image', event)"><i class="fa-solid fa-xmark"></i></button>
+                                <img src="" id="imagePreviewElement" class="image-preview" alt="Preview Image">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Input Block (hidden by default) -->
+                    <div id="modalityInput_text" class="modality-input-block" style="display: none;">
+                        <label class="form-label">Enter Encyclopedic Text Description</label>
+                        <textarea id="textQueryInput" class="textarea-input" placeholder="Enter a descriptive paragraph detailing the visual, taxonomic, or habitat features of the marine animal (e.g. body shape, color, fin structures). Minimum 3 words."></textarea>
+                        
+                        <div style="margin-top: 1rem;">
+                            <label class="form-label" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px;">Or upload / drop a text file (.txt)</label>
+                            <div class="upload-area" id="textDropzone" style="height: 100px; padding: 1rem; border-radius: 12px; font-size: 0.85rem;" onclick="document.getElementById('textFileInput').click()">
+                                <i class="fa-solid fa-file-lines" style="font-size: 1.5rem; margin-bottom: 6px; color: var(--neon-blue);"></i>
+                                <p style="margin: 0; font-size: 0.85rem;" id="textDropzoneText">Drag & drop a .txt file, or click to upload</p>
+                                <input type="file" id="textFileInput" accept=".txt" style="display: none;" onchange="handleTextFileUpload(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio Input Block (hidden by default) -->
+                    <div id="modalityInput_audio" class="modality-input-block" style="display: none;">
+                        <label class="form-label">Upload Hydrophone Audio Clip (.wav)</label>
+                        <div class="upload-area" id="audioDropzone" onclick="document.getElementById('audioFileInput').click()">
+                            <i class="fa-solid fa-volume-high upload-icon"></i>
+                            <p class="upload-text">Drag & drop your acoustic sound recording here</p>
+                            <p class="upload-subtext">Requires mono .wav file (Auto-resampled to 16kHz & padded to 5s)</p>
+                            <input type="file" id="audioFileInput" class="file-input" accept="audio/wav,audio/x-wav" onchange="previewAudio(this)">
+                            
+                            <div class="preview-container" id="audioPreviewContainer">
+                                <button type="button" class="remove-file-btn" onclick="clearFile('audio', event)"><i class="fa-solid fa-xmark"></i></button>
+                                <div class="audio-preview-ui">
+                                    <i class="fa-solid fa-file-audio"></i>
+                                    <p id="audioFileName" style="font-size: 0.9rem; font-weight: 600;"></p>
+                                    <audio id="audioPreviewElement" controls style="width: 100%; max-width: 280px;"></audio>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Name Selector Block (hidden by default) -->
+                    <div id="modalityInput_name" class="modality-input-block" style="display: none;">
+                        <label class="form-label">Select Species for Lookup</label>
+                        <div class="select-input-container">
+                            <select id="speciesSelectInput" class="select-input">
+                                <option value="">Loading species list...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Form Submit -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fa-solid fa-bolt"></i>
+                    Execute Query
+                </button>
+            </form>
+        </section>
+
+        <!-- Right Panel: Results Dashboard -->
+        <section class="card" style="min-height: 520px; display: flex; flex-direction: column;">
+            <div class="result-empty" id="resultEmpty">
+                <i class="fa-solid fa-chart-line"></i>
+                <h3>No Query Executed Yet</h3>
+                <p style="font-size: 0.9rem; max-width: 280px; margin-top: 6px;">Configure your parameters on the left and submit to view diagnostic metrics and cross-modal retrieval rankings.</p>
+            </div>
+
+            <div class="result-container" id="resultContainer">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-square-poll-vertical"></i>
+                    Diagnostic & Discovery Results
+                </h2>
+
+                <!-- Decision Banner -->
+                <div class="decision-banner accept" id="decisionBanner">
+                    <i class="fa-regular fa-circle-check" id="decisionIcon"></i>
+                    <div>
+                        <div class="decision-title" id="decisionTitle">CONFIDENT SPECIES MATCH FOUND</div>
+                        <div class="decision-sub" id="decisionSub">The query signature matches successfully within target boundaries.</div>
+                    </div>
+                </div>
+
+                <!-- Metric Gauges -->
+                <div class="metrics-grid">
+                    <!-- OC-SVM Card -->
+                    <div class="metric-card">
+                        <span class="metric-label">One-Class SVM</span>
+                        <div class="metric-value" id="svmValue" style="color: var(--neon-teal)">INLIER</div>
+                        <span class="metric-status pass" id="svmStatus">Accept</span>
+                    </div>
+                    
+                    <!-- Cosine Similarity Card -->
+                    <div class="metric-card">
+                        <span class="metric-label">Max Cosine Similarity</span>
+                        <div class="metric-value" id="simValue">0.5982</div>
+                        <span class="metric-status pass" id="simStatus">Pass (>= 0.56)</span>
+                    </div>
+                    
+                    <!-- Confidence Margin Card -->
+                    <div class="metric-card">
+                        <span class="metric-label">Confidence Margin</span>
+                        <div class="metric-value" id="marginValue">0.1241</div>
+                        <span class="metric-status pass" id="marginStatus">Pass (>= 0.02)</span>
+                    </div>
+                </div>
+
+                <!-- Cross-modal Retrieval List -->
+                <div>
+                    <h3 class="form-label" style="margin-bottom: 12px; font-weight: 700; color: #ffffff;">Retrieved Match Listings (Top 5)</h3>
+                    <div class="matches-list" id="matchesList">
+                        <!-- Match rows injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Matched Species Profile (Top 1) -->
+                <div id="matchedProfileContainer" style="display: none; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 20px; padding: 1.5rem; flex-direction: column; gap: 1.25rem; margin-top: 1.5rem;">
+                    <h3 class="form-label" style="font-weight: 700; color: #ffffff; margin-bottom: 0;">Matched Species Profile (Rank #1)</h3>
+                    
+                    <!-- Species Image -->
+                    <div style="width: 100%; height: 200px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <img id="matchedProfileImage" src="" alt="Matched Species Photo" style="width: 100%; height: 100%; object-fit: cover; display: none;" onload="this.style.display='block'; document.getElementById('imagePlaceholder').style.display='none'">
+                        <div id="imagePlaceholder" style="color: var(--text-secondary); font-size: 3rem;"><i class="fa-solid fa-image"></i></div>
+                    </div>
+                    
+                    <!-- Species Text -->
+                    <div style="background: rgba(0,0,0,0.15); border-radius: 12px; padding: 1rem; border: 1px solid var(--border-color);">
+                        <label class="form-label" style="margin-bottom: 6px; font-weight: 600; color: var(--neon-blue);">Encyclopedic Profile Description</label>
+                        <p id="matchedProfileText" style="font-size: 0.9rem; line-height: 1.5; color: var(--text-primary); text-align: justify;"></p>
+                    </div>
+
+                    <!-- Species Audio -->
+                    <div style="background: rgba(255,255,255,0.01); border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <label class="form-label" style="margin-bottom: 0; font-weight: 600; color: var(--text-primary);">Species Vocalization</label>
+                            <span style="font-size: 0.75rem; color: var(--text-secondary);">Play natural vocalization call.</span>
+                        </div>
+                        <audio id="matchedProfileAudio" controls style="width: 100%; max-width: 250px;"></audio>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direct Species Database Lookup Card -->
+            <div class="result-container" id="lookupContainer" style="display: none; flex-direction: column; gap: 2rem;">
+                <h2 class="section-title" id="lookupTitle">
+                    <i class="fa-solid fa-database"></i>
+                    Species Database Lookup
+                </h2>
+                
+                <!-- Species Name Banner -->
+                <div style="background: rgba(0, 229, 255, 0.06); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 20px; padding: 1.5rem; display: flex; align-items: center; gap: 1.25rem; color: var(--neon-blue);">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <div>
+                        <div class="decision-title" id="lookupSpeciesName" style="text-transform: uppercase; font-size: 1.2rem;">BLUE WHALE</div>
+                        <div class="decision-sub">Direct database lookup profile. Showing available media assets.</div>
+                    </div>
+                </div>
+
+                <!-- Image Gallery (min 3 images) -->
+                <div>
+                    <h3 class="form-label" style="font-weight: 700; color: #ffffff; margin-bottom: 12px;">Visual Phenotype Gallery (Images)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;" id="lookupImageGrid">
+                        <!-- 3 Image blocks injected here -->
+                    </div>
+                </div>
+
+                <!-- Text Profile -->
+                <div>
+                    <h3 class="form-label" style="font-weight: 700; color: #ffffff; margin-bottom: 12px;">Encyclopedic Profile Description</h3>
+                    <div style="background: rgba(0,0,0,0.15); border-radius: 16px; padding: 1.25rem; border: 1px solid var(--border-color);">
+                        <p id="lookupText" style="font-size: 0.95rem; line-height: 1.6; color: var(--text-primary); text-align: justify;"></p>
+                    </div>
+                </div>
+
+                <!-- Audio Gallery (min 2 audios) -->
+                <div id="lookupAudioSection">
+                    <h3 class="form-label" style="font-weight: 700; color: #ffffff; margin-bottom: 12px;">Acoustic Vocalizations (Audio)</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;" id="lookupAudioGrid">
+                        <!-- 2 Audio blocks injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Multimodal Marine Species Shared Latent Space (768-D) Project. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentModality = 'image';
+        let currentModel = 'closed';
+
+        // Load species on startup
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchSpeciesCatalog();
+            setupDragAndDrop();
+        });
+
+        async function fetchSpeciesCatalog() {
+            try {
+                const response = await fetch('/api/species');
+                const data = await response.json();
+                const select = document.getElementById('speciesSelectInput');
+                select.innerHTML = '<option value="">-- Choose a species --</option>';
+                
+                data.species.forEach(sp => {
+                    const opt = document.createElement('option');
+                    opt.value = sp;
+                    // Format display name: change underscores to spaces and capitalize words
+                    opt.textContent = sp.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Failed to load species:", e);
+                document.getElementById('speciesSelectInput').innerHTML = '<option value="">Failed to load catalog</option>';
+            }
+        }
+
+        function setModel(type) {
+            currentModel = type;
+            document.getElementById('modelClosed').classList.toggle('active', type === 'closed');
+            document.getElementById('modelOpen').classList.toggle('active', type === 'open');
+            
+            // Auto update default sliders text
+            updateSliderDefaults();
+        }
+
+        function setModality(mod) {
+            currentModality = mod;
+            
+            // Toggle tab active class
+            const tabs = ['tabImage', 'tabText', 'tabAudio', 'tabName'];
+            tabs.forEach(t => {
+                const id = t.charAt(3).toLowerCase() + t.slice(4);
+                document.getElementById(t).classList.toggle('active', id === mod);
+            });
+
+            // Toggle input blocks
+            const blocks = ['modalityInput_image', 'modalityInput_text', 'modalityInput_audio', 'modalityInput_name'];
+            blocks.forEach(b => {
+                const parts = b.split('_');
+                document.getElementById(b).style.display = (parts[1] === mod) ? 'block' : 'none';
+            });
+
+            updateSliderDefaults();
+        }
+
+        function updateSliderDefaults() {
+            const simSlider = document.getElementById('simThresholdSlider');
+            const simValue = document.getElementById('simThresholdValue');
+            const marginSlider = document.getElementById('marginThresholdSlider');
+            const marginValue = document.getElementById('marginThresholdValue');
+            
+            // Set slider representation back to "Auto (-1)" unless manually tweaked
+            if (simSlider.value <= 0 || simSlider.value == 0.45 || simSlider.value == 0.56 || simSlider.value == 0.53 || simSlider.value == 0.41 || simSlider.value == 0.35 || simSlider.value == 0.30 || simSlider.value == 0.37) {
+                simSlider.value = -1;
+            }
+            if (marginSlider.value <= 0 || marginSlider.value == 0.02) {
+                marginSlider.value = -1;
+            }
+
+            if (simSlider.value == -1) {
+                let def = 0.56;
+                if (currentModality === 'image') {
+                    def = (currentModel === 'closed') ? 0.56 : 0.42;
+                } else if (currentModality === 'text') {
+                    def = (currentModel === 'closed') ? 0.53 : 0.41;
+                } else if (currentModality === 'audio') {
+                    def = (currentModel === 'closed') ? 0.45 : 0.30;
+                }
+                simValue.textContent = `${def} (Auto)`;
+            } else {
+                simValue.textContent = simSlider.value;
+            }
+
+            if (marginSlider.value == -1) {
+                marginValue.textContent = `0.02 (Auto)`;
+            } else {
+                marginValue.textContent = marginSlider.value;
+            }
+        }
+
+        function updateSliderText(type) {
+            if (type === 'sim') {
+                const val = document.getElementById('simThresholdSlider').value;
+                document.getElementById('simThresholdValue').textContent = val;
+            } else {
+                const val = document.getElementById('marginThresholdSlider').value;
+                document.getElementById('marginThresholdValue').textContent = val;
+            }
+        }
+
+        // Preview File Functions
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('imagePreviewElement').src = e.target.result;
+                    document.getElementById('imagePreviewContainer').style.display = 'flex';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewAudio(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('audioFileName').textContent = input.files[0].name;
+                    document.getElementById('audioPreviewElement').src = e.target.result;
+                    document.getElementById('audioPreviewContainer').style.display = 'flex';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function handleTextFileUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.name.endsWith('.txt')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('textQueryInput').value = e.target.result;
+                        document.getElementById('textDropzoneText').innerHTML = `<span style="color: var(--neon-teal); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Loaded: ${file.name}</span>`;
+                    };
+                    reader.readAsText(file);
+                } else {
+                    alert("Please select a valid .txt file.");
+                    input.value = '';
+                }
+            }
+        }
+
+        function clearFile(type, event) {
+            if (event) event.stopPropagation();
+            if (type === 'image') {
+                document.getElementById('imageFileInput').value = '';
+                document.getElementById('imagePreviewContainer').style.display = 'none';
+                document.getElementById('imagePreviewElement').src = '';
+            } else {
+                document.getElementById('audioFileInput').value = '';
+                document.getElementById('audioPreviewContainer').style.display = 'none';
+                document.getElementById('audioPreviewElement').src = '';
+                document.getElementById('audioFileName').textContent = '';
+            }
+        }
+
+        // Setup dropzones
+        function setupDragAndDrop() {
+            const setupZone = (zoneId, fileInputId, previewFn) => {
+                const zone = document.getElementById(zoneId);
+                const input = document.getElementById(fileInputId);
+                
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('dragover');
+                });
+                
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('dragover');
+                });
+                
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('dragover');
+                    if (e.dataTransfer.files.length) {
+                        input.files = e.dataTransfer.files;
+                        previewFn(input);
+                    }
+                });
+            };
+
+            setupZone('imageDropzone', 'imageFileInput', previewImage);
+            setupZone('audioDropzone', 'audioFileInput', previewAudio);
+            setupZone('textDropzone', 'textFileInput', handleTextFileUpload);
+        }
+
+        // Submit query to API
+        async function submitQuery(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('modality', currentModality);
+            formData.append('model_type', currentModel);
+            
+            // Tell backend to use optimal defaults
+            formData.append('threshold', -1);
+            formData.append('margin_threshold', -1);
+
+            // Modality inputs
+            if (currentModality === 'image') {
+                const file = document.getElementById('imageFileInput').files[0];
+                if (!file) {
+                    alert("Please select or drop an image file first.");
+                    return;
+                }
+                formData.append('file', file);
+            } else if (currentModality === 'text') {
+                const text = document.getElementById('textQueryInput').value.trim();
+                if (!text) {
+                    alert("Please enter a text description first.");
+                    return;
+                }
+                formData.append('text_input', text);
+            } else if (currentModality === 'audio') {
+                const file = document.getElementById('audioFileInput').files[0];
+                if (!file) {
+                    alert("Please select or drop a WAV audio file first.");
+                    return;
+                }
+                formData.append('file', file);
+            } else if (currentModality === 'name') {
+                const name = document.getElementById('speciesSelectInput').value;
+                if (!name) {
+                    alert("Please select a species from the lookup dropdown.");
+                    return;
+                }
+                formData.append('text_input', name);
+            }
+
+            // Display loading spinner
+            const spinner = document.getElementById('loadingSpinner');
+            const spinnerText = document.getElementById('spinnerText');
+            spinner.style.display = 'flex';
+            
+            if (currentModality === 'image' || currentModality === 'audio') {
+                spinnerText.textContent = "Extracting raw backbone features & mapping to shared space...";
+            } else {
+                spinnerText.textContent = "Encoding text query signature...";
+            }
+
+            try {
+                const response = await fetch('/api/query', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || "Server error occurred during inference.");
+                }
+                
+                const data = await response.json();
+                displayResults(data);
+                
+            } catch (err) {
+                alert(`Query execution failed:\n${err.message}`);
+            } finally {
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Render response data
+        function displayResults(data) {
+            document.getElementById('resultEmpty').style.display = 'none';
+            
+            const resultContainer = document.getElementById('resultContainer');
+            const lookupContainer = document.getElementById('lookupContainer');
+            
+            // Stop any playing audios before rendering new view
+            const profileAud = document.getElementById('matchedProfileAudio');
+            if (profileAud) {
+                profileAud.pause();
+                profileAud.src = '';
+            }
+            const lookupAudGrid = document.getElementById('lookupAudioGrid');
+            if (lookupAudGrid) {
+                const auds = lookupAudGrid.querySelectorAll('audio');
+                auds.forEach(a => { a.pause(); a.src = ''; });
+            }
+
+            if (data.is_lookup) {
+                resultContainer.style.display = 'none';
+                lookupContainer.style.display = 'flex';
+                
+                const topSpecies = data.matched_species;
+                const formattedName = topSpecies.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                document.getElementById('lookupSpeciesName').textContent = formattedName;
+                
+                // Fetch asset counts and text
+                document.getElementById('lookupText').textContent = "Loading encyclopedic description profile...";
+                
+                fetch(`/api/species/assets/${encodeURIComponent(topSpecies)}`)
+                    .then(res => res.json())
+                    .then(assets => {
+                        document.getElementById('lookupText').textContent = assets.text;
+                        
+                        // Render Image Grid (Minimum 3 images)
+                        const imgGrid = document.getElementById('lookupImageGrid');
+                        imgGrid.innerHTML = '';
+                        const numImgsToShow = Math.max(3, assets.num_images);
+                        
+                        for (let i = 0; i < numImgsToShow; i++) {
+                            const imgIdx = (assets.num_images > 0) ? (i % assets.num_images) : 0;
+                            const div = document.createElement('div');
+                            div.style.cssText = 'height: 150px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center;';
+                            
+                            if (assets.num_images > 0) {
+                                div.innerHTML = `<img src="/api/species/image/${encodeURIComponent(topSpecies)}/${imgIdx}?t=${Date.now() + i}" alt="Species Photo ${i+1}" style="width: 100%; height: 100%; object-fit: cover;">`;
+                            } else {
+                                div.innerHTML = `<div style="color: var(--text-secondary); font-size: 2rem;"><i class="fa-solid fa-image"></i></div>`;
+                            }
+                            imgGrid.appendChild(div);
+                        }
+
+                        // Render Audio Grid (Minimum 2 audios)
+                        const audGrid = document.getElementById('lookupAudioGrid');
+                        audGrid.innerHTML = '';
+                        const audioSection = document.getElementById('lookupAudioSection');
+                        
+                        if (assets.num_audios > 0) {
+                            audioSection.style.display = 'block';
+                            const numAudsToShow = Math.max(2, assets.num_audios);
+                            
+                            for (let i = 0; i < numAudsToShow; i++) {
+                                const audIdx = i % assets.num_audios;
+                                const div = document.createElement('div');
+                                div.style.cssText = 'background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center;';
+                                div.innerHTML = `
+                                    <span class="form-label" style="font-size: 0.75rem; margin-bottom: 0;">Vocalization Audio #${i+1}</span>
+                                    <audio controls style="width: 100%; max-width: 100%;" src="/api/species/audio/${encodeURIComponent(topSpecies)}/${audIdx}"></audio>
+                                `;
+                                audGrid.appendChild(div);
+                            }
+                        } else {
+                            audioSection.style.display = 'none';
+                        }
+                    })
+                    .catch(() => {
+                        document.getElementById('lookupText').textContent = "Failed to load description profile.";
+                    });
+                    
+            } else {
+                lookupContainer.style.display = 'none';
+                resultContainer.style.display = 'flex';
+                
+                const banner = document.getElementById('decisionBanner');
+                const icon = document.getElementById('decisionIcon');
+                const title = document.getElementById('decisionTitle');
+                const sub = document.getElementById('decisionSub');
+
+                if (data.decision === 'accept') {
+                    banner.className = "decision-banner accept";
+                    icon.className = "fa-regular fa-circle-check";
+                    title.textContent = "CONFIDENT SPECIES MATCH FOUND";
+                    sub.textContent = "The query signature matches successfully within target boundaries.";
+                } else {
+                    banner.className = "decision-banner reject";
+                    icon.className = "fa-solid fa-circle-exclamation";
+                    title.textContent = "NEW / UNKNOWN CREATURE DETECTED";
+                    sub.textContent = "This specimen does not confidently map to any known classes.";
+                }
+
+                // Metric values & states
+                const svmVal = document.getElementById('svmValue');
+                const svmStatus = document.getElementById('svmStatus');
+                svmVal.textContent = data.svm_status;
+                if (data.svm_status === 'INLIER') {
+                    svmVal.style.color = 'var(--neon-teal)';
+                    svmStatus.className = "metric-status pass";
+                    svmStatus.textContent = "Accept";
+                } else {
+                    svmVal.style.color = 'var(--neon-red)';
+                    svmStatus.className = "metric-status fail";
+                    svmStatus.textContent = "Reject";
+                }
+
+                const simVal = document.getElementById('simValue');
+                const simStatus = document.getElementById('simStatus');
+                simVal.textContent = data.similarity.toFixed(4);
+                if (data.similarity >= data.threshold) {
+                    simVal.style.color = 'var(--text-primary)';
+                    simStatus.className = "metric-status pass";
+                    simStatus.textContent = `Pass (>= ${data.threshold})`;
+                } else {
+                    simVal.style.color = 'var(--neon-red)';
+                    simStatus.className = "metric-status fail";
+                    simStatus.textContent = `Fail (< ${data.threshold})`;
+                }
+
+                const marginVal = document.getElementById('marginValue');
+                const marginStatus = document.getElementById('marginStatus');
+                marginVal.textContent = data.margin.toFixed(4);
+                if (data.margin >= data.margin_threshold) {
+                    marginVal.style.color = 'var(--text-primary)';
+                    marginStatus.className = "metric-status pass";
+                    marginStatus.textContent = `Pass (>= ${data.margin_threshold})`;
+                } else {
+                    marginVal.style.color = 'var(--neon-red)';
+                    marginStatus.className = "metric-status fail";
+                    marginStatus.textContent = `Fail (< ${data.margin_threshold})`;
+                }
+
+                // Match listing
+                const list = document.getElementById('matchesList');
+                list.innerHTML = '';
+                
+                if (data.matches && data.matches.length > 0) {
+                    data.matches.forEach((m, idx) => {
+                        const row = document.createElement('div');
+                        row.className = "match-row";
+                        
+                        const scorePercent = Math.max(0, Math.min(100, m.similarity * 100));
+                        const nameFormatted = m.species.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                        
+                        row.innerHTML = `
+                            <div class="match-info">
+                                <span class="match-rank">${idx + 1}</span>
+                                <span class="match-name">${nameFormatted}</span>
+                            </div>
+                            <div class="match-score-container">
+                                <span class="match-score">${m.similarity.toFixed(4)}</span>
+                                <div class="match-bar-bg">
+                                    <div class="match-bar-fill" style="width: ${scorePercent}%"></div>
+                                </div>
+                            </div>
+                        `;
+                        list.appendChild(row);
+                    });
+                } else {
+                    list.innerHTML = '<p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">No retrieval matches available for this OOD query.</p>';
+                }
+
+                // Load and display Top-1 Matched Species Profile
+                const profileContainer = document.getElementById('matchedProfileContainer');
+                if (data.decision === 'accept' && data.matches && data.matches.length > 0) {
+                    profileContainer.style.display = 'flex';
+                    
+                    const topSpecies = data.matches[0].species;
+                    
+                    // Load photo
+                    const profileImg = document.getElementById('matchedProfileImage');
+                    const placeholder = document.getElementById('imagePlaceholder');
+                    profileImg.style.display = 'none';
+                    placeholder.style.display = 'block';
+                    profileImg.src = `/api/species/image/${encodeURIComponent(topSpecies)}?t=${Date.now()}`;
+                    
+                    // Load audio
+                    const profileAud = document.getElementById('matchedProfileAudio');
+                    profileAud.src = `/api/species/audio/${encodeURIComponent(topSpecies)}`;
+                    profileAud.load();
+                    
+                    // Load text description
+                    document.getElementById('matchedProfileText').textContent = "Loading encyclopedic description profile...";
+                    fetch(`/api/species/text/${encodeURIComponent(topSpecies)}`)
+                        .then(res => res.json())
+                        .then(txtData => {
+                            document.getElementById('matchedProfileText').textContent = txtData.text;
+                        })
+                        .catch(() => {
+                            document.getElementById('matchedProfileText').textContent = "Failed to load description profile.";
+                        });
+                } else {
+                    profileContainer.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
