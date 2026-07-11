@@ -20,7 +20,7 @@ from collections import defaultdict
 from sklearn.svm import OneClassSVM
 
 # Add marine_alignment folder to path
-ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "marine_alignment")
+ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "marine_alignment")
 sys.path.insert(0, ALIGNMENT_DIR)
 
 from config import (
@@ -82,7 +82,7 @@ def main():
     print("=" * 72)
 
     # 1. Collect OOD Audio Files
-    ood_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "datasets", "ood_audio_dataset")
+    ood_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "datasets", "ood_audio_dataset")
     ood_paths = collect_audio_files(ood_dir)
     print(f"Found {len(ood_paths)} OOD test audio files in {ood_dir}")
     if len(ood_paths) == 0:

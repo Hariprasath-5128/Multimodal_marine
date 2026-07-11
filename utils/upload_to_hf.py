@@ -5,7 +5,7 @@ from huggingface_hub import HfApi, login
 # 1. Login using your saved token from env/.env
 token = None
 try:
-    local_dir = os.path.dirname(os.path.abspath(__file__))
+    local_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     with open(os.path.join(local_dir, "env", ".env"), "r") as f:
         token = f.read().strip()
     login(token)
@@ -20,7 +20,7 @@ api = HfApi()
 
 # 2. Define your repository details
 REPO_ID = "Hariprasath5128/marine-multimodel"
-LOCAL_DIR = os.path.dirname(os.path.abspath(__file__))
+LOCAL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_TYPE = "model"
 
 print(f"\nTarget repository: {REPO_ID} on Hugging Face")

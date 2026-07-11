@@ -17,7 +17,7 @@ from fastapi.staticfiles import StaticFiles
 from sklearn.svm import OneClassSVM
 
 # Add marine_alignment folder to path
-ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "marine_alignment")
+ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "marine_alignment")
 sys.path.insert(0, ALIGNMENT_DIR)
 
 from config import (
@@ -32,7 +32,7 @@ import models_open
 app = FastAPI(title="Multimodal Marine Alignment Web Interface")
 
 # Create static folder if not exists
-STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
 os.makedirs(STATIC_DIR, exist_ok=True)
 
 class ModelManager:

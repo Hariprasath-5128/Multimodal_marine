@@ -28,7 +28,7 @@ from sklearn.cluster import DBSCAN
 warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 
 # Add marine_alignment folder to path so we can import config, dataset, models
-ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "marine_alignment")
+ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "marine_alignment")
 sys.path.insert(0, ALIGNMENT_DIR)
 
 from config import (
@@ -39,7 +39,7 @@ from dataset import get_test_text_split, make_splits, EMBEDDING_DIR
 import models_closed
 import models_open
 
-BUFFER_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "unknowns_buffer.json")
+BUFFER_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "unknowns_buffer.json")
 
 
 def _get_image_transform():

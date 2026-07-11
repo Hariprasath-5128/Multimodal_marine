@@ -25,7 +25,7 @@ from sklearn.svm import OneClassSVM
 warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 
 # Add marine_alignment folder to path
-ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "marine_alignment")
+ALIGNMENT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "marine_alignment")
 sys.path.insert(0, ALIGNMENT_DIR)
 
 from config import (
