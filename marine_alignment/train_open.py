@@ -87,7 +87,7 @@ def train_epoch_phase1(pipeline, dataloader, optimizer, device):
     for batch in dataloader:
         optimizer.zero_grad()
 
-        image_emb = batch["image_tensor"].to(device)
+        image_tensor = batch["image_tensor"].to(device)
         text_emb  = batch["text_emb"].to(device)
         has_text  = batch["has_text"].to(device)
         labels    = batch["species_id"].to(device)
@@ -97,7 +97,7 @@ def train_epoch_phase1(pipeline, dataloader, optimizer, device):
             print("  [DEBUG] batch species dist: " +
                   str(list(zip(unique.tolist(), counts.tolist()))))
 
-        proj_img = pipeline.image_head(image_emb)
+        proj_img = pipeline.image_head(image_tensor)
 
         loss_sum = None
         if has_text.sum() >= MIN_VALID_SAMPLES:

@@ -1,0 +1,16 @@
+faiss-cpu
+huggingface_hub
+matplotlib
+numpy
+Pillow
+pillow-avif-plugin
+requests
+seaborn
+sentence_transformers
+scikit-learn
+timm
+torch
+torchaudio
+torchvision
+tqdm
+transformers

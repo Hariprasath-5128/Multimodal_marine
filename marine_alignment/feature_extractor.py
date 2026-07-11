@@ -376,38 +376,41 @@ def extract_species_audio_embeddings(
 
 def collect_image_samples(image_root: str) -> list[tuple[str, str, str]]:
     """
-    Walk image_dataset/train/<domain>/<species>/<image_files> OR
-    image_dataset/train/<domain>/<image_files> if the domain has no species subdirectories.
+    Walk image_dataset/train/<domain>/<species>/<image_files> or
+    image_dataset/train/<species_and_domain>/<image_files>
     and return list of (species_key, domain, abs_image_path).
     """
     samples = []
-    IMG_EXTENSIONS = ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.avif")
-    for domain in sorted(os.listdir(image_root)):
-        domain_dir = os.path.join(image_root, domain)
-        if not os.path.isdir(domain_dir):
+    for entry in sorted(os.listdir(image_root)):
+        entry_dir = os.path.join(image_root, entry)
+        if not os.path.isdir(entry_dir):
             continue
-        # Check if this folder directly contains images (flat layout)
-        has_images = any(
-            glob.glob(os.path.join(domain_dir, ext))
-            for ext in IMG_EXTENSIONS
-        )
-        if has_images:
-            species_key = canonical_species(domain)
-            for ext in IMG_EXTENSIONS:
-                for img_path in sorted(glob.glob(os.path.join(domain_dir, ext))):
+
+        # Check if this folder contains images directly (single-species taxon)
+        has_direct_images = False
+        for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp"):
+            if glob.glob(os.path.join(entry_dir, ext)):
+                has_direct_images = True
+                break
+
+        if has_direct_images:
+            species_key = canonical_species(entry)
+            domain = entry
+            for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp"):
+                for img_path in sorted(glob.glob(os.path.join(entry_dir, ext))):
                     samples.append((species_key, domain, img_path))
         else:
-            # Domain layout — drill one level deeper
-            for species_folder in sorted(os.listdir(domain_dir)):
-                species_dir = os.path.join(domain_dir, species_folder)
+            # It contains subfolders for nested species (multi-species taxon like seal/whale)
+            for species_folder in sorted(os.listdir(entry_dir)):
+                species_dir = os.path.join(entry_dir, species_folder)
                 if not os.path.isdir(species_dir):
                     continue
                 species_key = canonical_species(species_folder)
-                for ext in IMG_EXTENSIONS:
+                domain = entry
+                for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp"):
                     for img_path in sorted(glob.glob(os.path.join(species_dir, ext))):
                         samples.append((species_key, domain, img_path))
     return samples
-
 
 
 # ──────────────────────────────────────────────────────────────────────────────

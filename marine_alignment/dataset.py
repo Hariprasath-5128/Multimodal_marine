@@ -221,26 +221,13 @@ class MarineFeatureDataset(Dataset):
         for domain in sorted(os.listdir(train_root)):
             domain_dir = os.path.join(train_root, domain)
             if not os.path.isdir(domain_dir): continue
-            
-            # Check if this folder directly contains images (flat layout)
-            has_images = any(
-                glob.glob(os.path.join(domain_dir, ext))
-                for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.avif")
-            )
-            if has_images:
-                species_key = canonical(domain)
+            for species_folder in sorted(os.listdir(domain_dir)):
+                species_dir = os.path.join(domain_dir, species_folder)
+                if not os.path.isdir(species_dir): continue
+                species_key = canonical(species_folder)
                 for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.avif"):
-                    for p in sorted(glob.glob(os.path.join(domain_dir, ext))):
+                    for p in sorted(glob.glob(os.path.join(species_dir, ext))):
                         self.image_paths_per_species[species_key].append(p)
-            else:
-                for species_folder in sorted(os.listdir(domain_dir)):
-                    species_dir = os.path.join(domain_dir, species_folder)
-                    if not os.path.isdir(species_dir): continue
-                    species_key = canonical(species_folder)
-                    for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.avif"):
-                        for p in sorted(glob.glob(os.path.join(species_dir, ext))):
-                            self.image_paths_per_species[species_key].append(p)
-
 
     def __len__(self) -> int:
         return len(self.file_list)

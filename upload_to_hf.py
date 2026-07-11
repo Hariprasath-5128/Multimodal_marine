@@ -74,13 +74,7 @@ zip_and_upload(
     "training/image_classification"
 )
 
-# 3. Text Classification Model
-zip_and_upload(
-    os.path.join(LOCAL_DIR, "training", "text_classification", "marine_text_reasoning_model_v4"),
-    "training/text_classification"
-)
-
-# 4. Multimodal trained_projection_heads
+# 3. Multimodal trained_projection_heads
 zip_and_upload(
     os.path.join(LOCAL_DIR, "marine_alignment", "trained_projection_heads"),
     "marine_alignment"
