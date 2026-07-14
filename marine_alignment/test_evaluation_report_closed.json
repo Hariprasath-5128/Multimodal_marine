@@ -5,7 +5,7 @@
     "image": {
       "source": "test",
       "n_species": 71,
-      "n_images": 391
+      "n_images": 389
     },
     "text": {
       "source": "test",
@@ -19,21 +19,21 @@
     }
   },
   "test_img2txt": {
-    "R@1": 0.7084,
-    "R@5": 0.8261,
-    "R@10": 0.8849
+    "R@1": 0.7069,
+    "R@5": 0.8252,
+    "R@10": 0.8843
   },
   "test_img2aud": {
-    "R@1": 0.7431,
-    "R@5": 0.8611,
-    "R@10": 0.9375
+    "R@1": 0.7394,
+    "R@5": 0.8592,
+    "R@10": 0.9366
   },
-  "test_img2aud_n_queries": 144,
+  "test_img2aud_n_queries": 142,
   "test_img2aud_n_species": 32,
   "test_img2aud_note": "Recall computed only over images whose species has audio in gallery",
-  "test_img2txt_composite": 0.7614,
-  "test_img2aud_composite": 0.7979,
-  "overall_composite": 0.7796,
+  "test_img2txt_composite": 0.7602,
+  "test_img2aud_composite": 0.7951,
+  "overall_composite": 0.7776,
   "per_species": {
     "amazon_river_dolphin": {
       "n_images": 7,
@@ -106,9 +106,9 @@
       "audio_src": "missing"
     },
     "bearded_seal": {
-      "n_images": 4,
+      "n_images": 3,
       "img2txt": {
-        "R@1": 0.5,
+        "R@1": 0.3333,
         "R@5": 1.0,
         "R@10": 1.0
       },
@@ -148,14 +148,14 @@
       "audio_src": "missing"
     },
     "bottlenose_dolphin": {
-      "n_images": 4,
+      "n_images": 3,
       "img2txt": {
-        "R@1": 0.5,
-        "R@5": 0.75,
+        "R@1": 0.3333,
+        "R@5": 0.6667,
         "R@10": 1.0
       },
       "img2aud": {
-        "R@1": 0.75,
+        "R@1": 0.6667,
         "R@5": 1.0,
         "R@10": 1.0
       },

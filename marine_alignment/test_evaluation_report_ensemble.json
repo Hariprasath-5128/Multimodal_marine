@@ -1,0 +1,28 @@
+{
+  "Train Prototypes Gallery": {
+    "closed": {
+      "recalls": {
+        "1": 0.9127079030329384,
+        "5": 0.9377106207196434,
+        "10": 0.9460810957712795
+      },
+      "counts": {
+        "2_modalities (I+T)": 1187,
+        "3_modalities (I+T+A)": 8006,
+        "1_modality (I)": 6
+      }
+    },
+    "open": {
+      "recalls": {
+        "1": 0.9139036851831721,
+        "5": 0.9482552451353408,
+        "10": 0.950103272094793
+      },
+      "counts": {
+        "2_modalities (I+T)": 1187,
+        "3_modalities (I+T+A)": 8006,
+        "1_modality (I)": 6
+      }
+    }
+  }
+}
